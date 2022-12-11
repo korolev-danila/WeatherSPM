@@ -1,6 +1,6 @@
 //
 //  AppDelegate.swift
-//  WeatherApp
+//  Weather
 //
 //  Created by Данила on 11.12.2022.
 //
