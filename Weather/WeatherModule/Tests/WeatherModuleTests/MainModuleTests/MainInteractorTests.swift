@@ -37,7 +37,7 @@ final class MainInteractorTests: XCTestCase {
     }
     
 
-    func testFetchCountrys() {
+    func testFetchCountrysNoThrow() {
         
         XCTAssertNoThrow(interactor.fetchCountrys())
     }
@@ -66,6 +66,19 @@ final class MainInteractorTests: XCTestCase {
         XCTAssertEqual(mockPresenter.countrys.count, 1)
 
     }
+     
+    func testRequestFlagImgNotThrows() {
+        
+        interactor.save(cityMock)
+        let country = mockPresenter.countrys[0]
+        XCTAssertNoThrow(interactor.requestFlagImg(country: country))
+    }
     
+    func testRequestWeaherNotThrows() {
+        
+        interactor.save(cityMock)
+        let city = mockPresenter.countrys[0].citysArray[0]
+        XCTAssertNoThrow(interactor.requestWeaher(forCity: city))
+    }
 }
 

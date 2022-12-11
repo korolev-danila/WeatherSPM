@@ -9,8 +9,11 @@
 import XCTest
 @testable import WeatherModule
 
-class MockMainPresenter: MainInteractorOutputProtocol {
+class MockMainPresenter {
     public var countrys: [Country] = []
+}
+  
+extension MockMainPresenter: MainInteractorOutputProtocol {
     
     public func updateTableView() {
         
@@ -22,3 +25,8 @@ class MockMainPresenter: MainInteractorOutputProtocol {
     
 }
 
+extension MockMainPresenter: MainPresenterDelegate {
+    public func save(_ citySearch: CitySearch) {
+        
+    }
+}
