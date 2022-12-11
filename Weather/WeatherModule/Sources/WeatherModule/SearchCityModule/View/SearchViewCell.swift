@@ -57,8 +57,8 @@ final class SearchCell: UITableViewCell {
         self.backgroundColor = .clear
         self.selectionStyle = .none
         
-        self.addSubview(nameLabel)
-        self.addSubview(countryLabel)
+        contentView.addSubview(nameLabel)
+        contentView.addSubview(countryLabel)
         
         nameLabel.snp.makeConstraints { make in
             make.leading.equalTo(12)

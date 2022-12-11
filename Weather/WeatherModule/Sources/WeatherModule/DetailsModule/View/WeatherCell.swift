@@ -167,11 +167,11 @@ final class CollectionCell: UICollectionViewCell {
         
         self.backgroundColor = .white
         
-        self.addSubview(dateLabel)
-        self.addSubview(dayOfTheWeekLabel)
-        self.addSubview(tempView)
-        self.addSubview(webView)
-        self.addSubview(iconActivityView)
+        contentView.addSubview(dateLabel)
+        contentView.addSubview(dayOfTheWeekLabel)
+        contentView.addSubview(tempView)
+        contentView.addSubview(webView)
+        contentView.addSubview(iconActivityView)
         
         self.vcWebDelegate.webView = webView
         self.vcWebDelegate.iconActivityView = iconActivityView

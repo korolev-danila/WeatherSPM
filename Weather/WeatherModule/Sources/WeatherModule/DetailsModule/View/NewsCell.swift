@@ -62,8 +62,8 @@ final class NewsCell: UITableViewCell {
     private func setupViews() {
         self.selectionStyle = .none
         
-        self.addSubview(dateLabel)
-        self.addSubview(titleLabel)
+        contentView.addSubview(dateLabel)
+        contentView.addSubview(titleLabel)
        // self.addSubview(descriptionTextView)
         
         dateLabel.snp.makeConstraints { make in

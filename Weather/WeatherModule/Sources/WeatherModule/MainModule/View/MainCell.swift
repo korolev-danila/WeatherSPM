@@ -119,11 +119,11 @@ final class MainCell: UITableViewCell {
         self.selectionStyle = .none
         
         contentView.addSubview(deleteButton)
-        self.addSubview(nameLabel)
-        self.addSubview(tempLabel)
-        self.addSubview(cLabel)
-        self.addSubview(timeLabel)
-        self.addSubview(activityView)
+        contentView.addSubview(nameLabel)
+        contentView.addSubview(tempLabel)
+        contentView.addSubview(cLabel)
+        contentView.addSubview(timeLabel)
+        contentView.addSubview(activityView)
         
         nameLabel.snp.makeConstraints { make in
             make.leading.equalTo(30)
