@@ -5,7 +5,6 @@
 //  Created by Данила on 20.11.2022.
 //
 
-import Foundation
 
 struct CitySearch: Codable {
     let name: String

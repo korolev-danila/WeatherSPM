@@ -5,7 +5,6 @@
 //  Created by Данила on 30.11.2022.
 //
 
-import Foundation
 
 final class SearchModulBuider {
     static func build(delegate: MainPresenterDelegate) -> SearchViewController {

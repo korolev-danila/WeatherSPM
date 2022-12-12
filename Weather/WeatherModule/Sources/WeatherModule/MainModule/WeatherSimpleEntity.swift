@@ -5,7 +5,6 @@
 //  Created by Данила on 24.11.2022.
 //
 
-import Foundation
 
 struct WeatherSimple: Decodable {
     var info: InfoSimple?
