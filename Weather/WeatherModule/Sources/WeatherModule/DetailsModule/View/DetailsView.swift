@@ -5,7 +5,6 @@
 //  Created by Данила on 23.11.2022.
 //
 
-import Foundation
 import UIKit
 import SnapKit
 
@@ -37,7 +36,6 @@ protocol DetailsViewOutputProtocol {
 final class DetailsViewController: UIViewController {
     
     private let presenter: DetailsViewOutputProtocol
-    
     
     private let barButton: UIButton = {
         let button = UIButton()
@@ -140,6 +138,7 @@ final class DetailsViewController: UIViewController {
         
         setupViews()
         presenter.viewDidLoad()
+        self.navigationController?.interactivePopGestureRecognizer?.delegate = self
     }
     
     public override func viewDidAppear(_ animated: Bool) {
@@ -387,3 +386,13 @@ extension DetailsViewController: UITableViewDelegate, UITableViewDataSource {
         hasAnimatedAllCells = tableView.isLastVisibleCell(at: indexPath)
     }
 }
+
+
+
+// MARK: - UIGestureRecognizerDelegate
+extension DetailsViewController:UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
+}
+
