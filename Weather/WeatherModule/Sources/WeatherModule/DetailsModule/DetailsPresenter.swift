@@ -210,7 +210,7 @@ extension DetailsPresenter: DetailsViewOutputProtocol {
             if let svg = day.svgStr {
                 let svgOld = String(svg.dropFirst(84))
                 let svgNew = """
-    <svg xmlns="http://www.w3.org/2000/svg" width="\(heightOfCell*2)" height="\(heightOfCell*2)" viewBox="0 2 28 28">
+    <svg xmlns="https://www.w3.org/2000/svg" width="\(heightOfCell*2)" height="\(heightOfCell*2)" viewBox="0 2 28 28">
     """
                 svgStr = svgNew + svgOld
             }

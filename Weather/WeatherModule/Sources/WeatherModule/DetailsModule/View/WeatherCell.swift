@@ -25,6 +25,9 @@ final class CollectionCell: UICollectionViewCell {
         wv.isUserInteractionEnabled = false
         wv.backgroundColor = .clear
         
+        wv.allowsBackForwardNavigationGestures = true
+        wv.allowsLinkPreview = true
+        
         return wv
     }()
     

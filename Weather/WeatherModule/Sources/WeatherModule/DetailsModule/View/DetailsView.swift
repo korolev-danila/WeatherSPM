@@ -165,22 +165,16 @@ final class DetailsViewController: UIViewController {
         print("deinit DetailsViewController")
     }
 
-  
-    
-    private func setupContentSizeOfScroll() {
-        
-        let scrollViewH = imageViewHConst + imageToCityConst + cityViewHConst + collectionViewHConst + collToTableConst
-        
-        scrollView.contentSize = CGSize(width:self.view.frame.size.width, height: scrollViewH + newsTableView.frame.size.height)
-    }
+
     
     // MARK: - SetupViews
     private func setupShimmerView() {
         view.addSubview(shimmerView)
         scrollView.isHidden = true
         
+                
         shimmerView.snp.makeConstraints { make in
-            make.top.equalToSuperview()
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
             make.bottom.equalToSuperview()
             make.leading.equalToSuperview()
             make.trailing.equalToSuperview()
@@ -226,6 +220,7 @@ final class DetailsViewController: UIViewController {
         
         collectionView.delegate = self
         collectionView.dataSource = self
+        collectionView.contentInset = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12)
         
         newsTableView.delegate = self
         newsTableView.dataSource = self
@@ -266,6 +261,13 @@ final class DetailsViewController: UIViewController {
             make.leading.equalTo(self.view.snp.leading)
             make.trailing.equalTo(self.view.snp.trailing)
         }
+    }
+    
+    private func setupContentSizeOfScroll() {
+        
+        let scrollViewH = imageViewHConst + imageToCityConst + cityViewHConst + collectionViewHConst + collToTableConst
+        
+        scrollView.contentSize = CGSize(width:self.view.frame.size.width, height: scrollViewH + newsTableView.frame.size.height)
     }
     
     // MARK: - Action scrollButtonTapped

@@ -100,6 +100,10 @@ final class ShimmerView: UIView {
     
     private let newsLayer = CAGradientLayer()
     
+    private let imageViewHConst: CGFloat = UIScreen.main.bounds.height / 4
+    private let imageToCityConst: CGFloat = -12
+    private let cityViewHConst: CGFloat = 172
+    
     
     // MARK: - Init
     override init( frame: CGRect) {
@@ -113,13 +117,11 @@ final class ShimmerView: UIView {
     }
     
     private func setupViews() {
-        backgroundColor = .white
+        backgroundColor = .white 
         
         addSubview(topView)
         addSubview(bigView)
-        
-        
-        
+          
         bigView.addSubview(cityView)
         bigView.addSubview(cell1View)
         bigView.addSubview(cell2View)
@@ -131,20 +133,20 @@ final class ShimmerView: UIView {
         topView.snp.makeConstraints { make in
             make.leading.equalTo(0)
             make.trailing.equalTo(0)
-            make.top.equalTo(92)
-            make.height.equalTo(UIScreen.main.bounds.height / 5)
+            make.top.equalToSuperview()
+            make.height.equalTo(imageViewHConst)
         }
         bigView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.trailing.equalToSuperview()
-            make.top.equalTo(topView.snp.bottom).offset(-12)
-            make.bottom.equalToSuperview()
+            make.top.equalTo(topView.snp.bottom).offset(imageToCityConst)
+            make.height.equalTo(self.snp.height)
         }
         cityView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.trailing.equalToSuperview()
             make.top.equalToSuperview()
-            make.height.equalTo(172)
+            make.height.equalTo(cityViewHConst)
         }
         cell1View.snp.makeConstraints { make in
             make.leading.equalTo(bigView.snp.leading).offset(8)
@@ -173,7 +175,7 @@ final class ShimmerView: UIView {
         newsView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.trailing.equalToSuperview()
-            make.bottom.equalToSuperview()
+            make.height.equalTo(400)
             make.top.equalTo(cell1View.snp.bottom).offset(8)
         }
         
