@@ -164,7 +164,7 @@ final class CollectionCell: UICollectionViewCell {
     
     func setupViews() {
         
-        self.backgroundColor = .white
+        backgroundColor = .white
         
         contentView.addSubview(dateLabel)
         contentView.addSubview(dayOfTheWeekLabel)

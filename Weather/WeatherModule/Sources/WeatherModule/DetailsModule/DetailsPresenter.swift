@@ -79,20 +79,26 @@ final class DetailsPresenter {
 extension DetailsPresenter: DetailsViewOutputProtocol {
     
     public func viewDidLoad() {
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+//            self.view?.reloadTableView()
+//        }
+//
+        
+        
         DispatchQueue.main.async {
             self.interactor.requestWeaher(forCity: self.city)
         }
-        
+
         view?.configureCityView()
-        
+
         DispatchQueue.main.async {
             self.interactor.getNewsForCity(self.city.name)
         }
     }
     
-    public func popVC() {
-        router.popVC()
-    }
+//    public func popVC() {
+//        router.popVC()
+//    }
     
     public func createCityViewModel() -> CityViewModel {
         var population = ""

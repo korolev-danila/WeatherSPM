@@ -126,8 +126,8 @@ final class MainViewController: UIViewController {
     
     // MARK: - NavigationBar UI&Method
     private func settingNC() {
-        self.navigationController?.navigationBar.topItem?.title = "Weather of Citys"
-        self.navigationController?.navigationBar.prefersLargeTitles = true
+        self.navigationController?.navigationBar.topItem?.title = "Citys"
+        self.navigationController?.navigationBar.prefersLargeTitles = false
         setEditButton()
     }
     
@@ -219,6 +219,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("Num: \(indexPath.row)")
         if deleteIsHidden {
+            self.navigationController?.navigationBar.prefersLargeTitles = false
             presenter.showDetails(index: indexPath)
         }
     }

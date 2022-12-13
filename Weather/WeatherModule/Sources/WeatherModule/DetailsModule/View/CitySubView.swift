@@ -376,12 +376,12 @@ final class CitySubView: UIView {
     
     public func setupViews() {
                 
-        self.addSubview(nameCityLabel)
-        self.addSubview(isCapitalImageView)
+        addSubview(nameCityLabel)
+        addSubview(isCapitalImageView)
 
-        self.addSubview(twoView)
-        self.addSubview(tempView)
-        self.addSubview(windView)
+        addSubview(twoView)
+        addSubview(tempView)
+        addSubview(windView)
         
         twoView.addSubview(populationTextCityLabel)
         twoView.addSubview(populationCityLabel)

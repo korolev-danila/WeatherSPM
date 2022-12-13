@@ -20,7 +20,6 @@ protocol DetailsViewInputProtocol: AnyObject {
 protocol DetailsViewOutputProtocol {
     
     func viewDidLoad()
-    func popVC()
     func createCityViewModel() -> CityViewModel
     func createFactViewModel() -> FactViewModel
     func changeSelectCellIndex(_ index: IndexPath?) -> IndexPath
@@ -36,44 +35,35 @@ protocol DetailsViewOutputProtocol {
 final class DetailsViewController: UIViewController {
     
     private let presenter: DetailsViewOutputProtocol
+        
+    private let scrollView: UIScrollView = {
+        let v = UIScrollView()
+        v.translatesAutoresizingMaskIntoConstraints = false
+        v.backgroundColor = .gray
+        
+        return v
+    }()
     
-    private let barButton: UIButton = {
-        let button = UIButton()
-        button.backgroundColor = .gray
-        button.contentMode = .center
-        button.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
-        let image = UIImage(systemName: "chevron.left",
-                            withConfiguration: UIImage.SymbolConfiguration(pointSize: 34,
-                                                                           weight: .semibold))
-        button.setImage(image, for: .normal)
-        button.imageView?.tintColor = .white
-        button.layer.cornerRadius = 22
+    private let scrollUpButton: UIButton = {
+        let button = UIButton(frame: CGRect(x: 0, y: 0, width: 68, height: 44))
+        button.setTitle("Scroll Up", for: .normal)
+        button.layer.cornerRadius = 12
+        button.backgroundColor = .blue
         button.clipsToBounds = false
-        button.imageView?.contentMode = .scaleAspectFit
+        button.isHidden = true
+        button.translatesAutoresizingMaskIntoConstraints = false
         
         return button
     }()
     
-    private let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.light)
     
     private let imageView: UIImageView = {
         let iView = UIImageView()
         iView.backgroundColor = .clear
         iView.contentMode = .scaleToFill
         iView.translatesAutoresizingMaskIntoConstraints = false
-        iView.isHidden = true
         
         return iView
-    }()
-    
-    private let bigView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .lightGray
-        view.layer.cornerRadius = 15
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.isHidden = true
-        
-        return view
     }()
     
     private var cityView: CitySubView = {
@@ -87,7 +77,7 @@ final class DetailsViewController: UIViewController {
         
         return view
     }()
-        
+    
     
     private let collectionView: UICollectionView = {
         
@@ -102,16 +92,24 @@ final class DetailsViewController: UIViewController {
         return collection
     }()
     
+    private let borderView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        return view
+    }()
     
-    
-    private let newsTableView: UITableView = {
-        let tv = UITableView() 
-        tv.backgroundColor = .white
+    private let newsTableView: DynamicTableView = {
+        let tv = DynamicTableView()
+        tv.backgroundColor = .gray
+        tv.isHidden = false
         tv.layer.cornerRadius = 15
         tv.layer.borderWidth = 2.0
         tv.layer.borderColor = UIColor.gray.cgColor
         tv.register(NewsCell.self, forCellReuseIdentifier: "tableCell")
         tv.translatesAutoresizingMaskIntoConstraints = false
+        tv.isScrollEnabled = false
         
         return tv
     }()
@@ -119,6 +117,12 @@ final class DetailsViewController: UIViewController {
     private var hasAnimatedAllCells = false
     
     private let shimmerView = ShimmerView()
+    
+    private let imageViewHConst: CGFloat = UIScreen.main.bounds.height / 4
+    private let imageToCityConst: CGFloat = -12
+    private let cityViewHConst: CGFloat = 172
+    private let collectionViewHConst: CGFloat = 108
+    private let collToTableConst: CGFloat = 2
     
     
     // MARK: - initialize & viewDidLoad
@@ -135,47 +139,45 @@ final class DetailsViewController: UIViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         
+        setupShimmerView()
+        setupBarButton()
         
-        setupViews()
+       
         presenter.viewDidLoad()
-        self.navigationController?.interactivePopGestureRecognizer?.delegate = self
     }
     
     public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-
+        
         shimmerView.startShimmerEffect()
     }
+    
+    override func viewDidLayoutSubviews() {
+        
+        setupScrollView()
+        setupViews()
+        setupScrollUpButton()
+        setupContentSizeOfScroll()
+    }
+    
     
     deinit {
         print("deinit DetailsViewController")
     }
 
+  
     
+    private func setupContentSizeOfScroll() {
+        
+        let scrollViewH = imageViewHConst + imageToCityConst + cityViewHConst + collectionViewHConst + collToTableConst
+        
+        scrollView.contentSize = CGSize(width:self.view.frame.size.width, height: scrollViewH + newsTableView.frame.size.height)
+    }
     
-    private func setupViews() {
-        view.backgroundColor = .white
-        
-        barButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
-        let leftBarButton = UIBarButtonItem(customView: barButton)
-        self.navigationItem.leftBarButtonItem = leftBarButton
-        
-        
-        
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        
-        newsTableView.delegate = self
-        newsTableView.dataSource = self
-        
-        
-        view.addSubview(imageView)
-        view.addSubview(bigView)
+    // MARK: - SetupViews
+    private func setupShimmerView() {
         view.addSubview(shimmerView)
-        
-        bigView.addSubview(cityView)
-        bigView.addSubview(collectionView)
-        bigView.addSubview(newsTableView)
+        scrollView.isHidden = true
         
         shimmerView.snp.makeConstraints { make in
             make.top.equalToSuperview()
@@ -183,52 +185,92 @@ final class DetailsViewController: UIViewController {
             make.leading.equalToSuperview()
             make.trailing.equalToSuperview()
         }
-        
-        imageView.snp.makeConstraints { make in
-            make.leading.equalTo(0)
-            make.trailing.equalTo(0)
-            make.top.equalTo(0)
-            make.height.equalTo(UIScreen.main.bounds.height / 5)
-        }
-        
-        bigView.snp.makeConstraints { make in
-            make.leading.equalTo(0)
-            make.trailing.equalTo(0)
-            make.top.equalTo(imageView.snp.bottom).offset(-12)
-            make.bottom.equalTo(0)
-        }
-        
-        
-        cityView.snp.makeConstraints { make in
-            make.leading.equalToSuperview()
-            make.trailing.equalToSuperview()
-            make.top.equalToSuperview()
-            make.height.equalTo(172)
-        }
-        
-
-        
-        collectionView.snp.makeConstraints { make in
-            make.leading.equalToSuperview()
-            make.trailing.equalToSuperview()
-            make.top.equalTo(cityView.snp.bottom)
-            make.height.equalTo(108)
-        }
-        
-      
-        
-        newsTableView.snp.makeConstraints { make in
-            make.leading.equalToSuperview()
-            make.trailing.equalToSuperview()
-            make.bottom.equalToSuperview()
-            make.top.equalTo(collectionView.snp.bottom).offset(2)
-        }
-        
     }
     
-    // MARK: - Action popVC
-    @objc private func backButtonTapped() {
-        presenter.popVC()
+    private func setupBarButton() {
+        self.navigationController?.interactivePopGestureRecognizer?.delegate = self
+        view.backgroundColor = .white
+    }
+    
+    private func setupScrollView(){
+        
+        view.addSubview(scrollView)
+        scrollView.delegate = self
+        
+        
+        let safeG = view.safeAreaLayoutGuide
+        
+        
+        scrollView.snp.makeConstraints { make in
+            make.top.equalTo(safeG.snp.top)
+            make.bottom.equalTo(safeG.snp.bottom)
+            make.leading.equalTo(safeG.snp.leading)
+            make.trailing.equalTo(safeG.snp.trailing)
+        }
+    }
+    
+    private func setupScrollUpButton() {
+        scrollUpButton.addTarget(self, action: #selector(scrollButtonTapped), for: .touchUpInside)
+        
+        view.addSubview(scrollUpButton)
+        
+        scrollUpButton.snp.makeConstraints { make in
+            make.top.equalTo(self.view.snp.top).offset(100)
+            make.centerX.equalTo(self.view.snp.centerX)
+            make.width.equalTo(88)
+        }
+    }
+    
+    private func setupViews() {
+        
+        
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        
+        newsTableView.delegate = self
+        newsTableView.dataSource = self
+        newsTableView.estimatedRowHeight = 80
+        
+        let contentG = scrollView.contentLayoutGuide
+        
+        scrollView.addSubview(imageView)
+        scrollView.addSubview(cityView)
+        scrollView.addSubview(collectionView)
+        scrollView.addSubview(newsTableView)
+                
+        
+        imageView.snp.makeConstraints { make in
+            make.top.equalTo(contentG.snp.top)
+            make.leading.equalTo(self.view.snp.leading)
+            make.trailing.equalTo(self.view.snp.trailing)
+            make.height.equalTo(imageViewHConst)
+        }
+        
+        cityView.snp.makeConstraints { make in
+            make.top.equalTo(imageView.snp.bottom).offset(imageToCityConst)
+            make.leading.equalTo(self.view.snp.leading)
+            make.trailing.equalTo(self.view.snp.trailing)
+            make.height.equalTo(cityViewHConst)
+        }
+        
+        
+        collectionView.snp.makeConstraints { make in
+            make.top.equalTo(cityView.snp.bottom)
+            make.leading.equalTo(self.view.snp.leading)
+            make.trailing.equalTo(self.view.snp.trailing)
+            make.height.equalTo(collectionViewHConst)
+        }
+        
+        newsTableView.snp.makeConstraints { make in
+            make.top.equalTo(collectionView.snp.bottom).offset(collToTableConst)
+            make.leading.equalTo(self.view.snp.leading)
+            make.trailing.equalTo(self.view.snp.trailing)
+        }
+    }
+    
+    // MARK: - Action scrollButtonTapped
+    @objc private func scrollButtonTapped() {
+        scrollView.setContentOffset(CGPoint.zero, animated: true)
     }
 }
 
@@ -257,7 +299,7 @@ extension DetailsViewController: DetailsViewInputProtocol {
         
         collectionView.cellForItem(at: indexCell)?.layer.borderColor = UIColor.darkGray.cgColor
         collectionView.cellForItem(at: indexCell)?.layer.shadowColor = UIColor.black.cgColor
-
+        
         cityView.configureWeatherView(model)
     }
     
@@ -265,27 +307,42 @@ extension DetailsViewController: DetailsViewInputProtocol {
         collectionView.reloadData()
     }
     
+    // MARK: -
     public func reloadTableView() {
+        
         newsTableView.reloadData()
+        newsTableView.invalidateIntrinsicContentSize()
+        setupContentSizeOfScroll()
+                
     }
     
     public func stopShimmer() {
         
-        let blurEffectView = UIVisualEffectView(effect: self.blurEffect)
-        self.view.addSubview(blurEffectView)
-        blurEffectView.snp.makeConstraints { make in
-            make.leading.equalToSuperview()
-            make.trailing.equalToSuperview()
-            make.top.equalToSuperview()
-            make.height.equalTo(34)
-        }
-        
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            self.imageView.isHidden = false
-            self.bigView.isHidden = false
+            self.scrollView.isHidden = false
             self.shimmerView.isHidden = true
             self.shimmerView.stopShimmerEffect()
-            
+        }
+    }
+}
+
+
+
+// MARK: - UIScrollViewDelegate
+extension DetailsViewController: UIScrollViewDelegate {
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
+        guard scrollView == self.scrollView else {
+            return
+        }
+        
+        if scrollView.bounds.intersects(collectionView.frame) == true  {
+            scrollUpButton.isHidden = true
+        } else if scrollView.contentOffset.y > 0 {
+            if scrollUpButton.isHidden {
+                scrollUpButton.isHidden = false
+            }
         }
     }
 }
@@ -341,14 +398,13 @@ extension DetailsViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 80
+        return  80
     }
     
-    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("Num: \(indexPath.row)")
-        presenter.printItem(indexPath)
-        
-    }
+//    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        print("Num: \(indexPath.row)")
+//        presenter.printItem(indexPath)
+//    }
     
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return presenter.newsCount()

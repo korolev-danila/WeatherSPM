@@ -113,10 +113,12 @@ final class ShimmerView: UIView {
     }
     
     private func setupViews() {
-        self.backgroundColor = .white
+        backgroundColor = .white
         
-        self.addSubview(topView)
-        self.addSubview(bigView)
+        addSubview(topView)
+        addSubview(bigView)
+        
+        
         
         bigView.addSubview(cityView)
         bigView.addSubview(cell1View)
@@ -129,7 +131,7 @@ final class ShimmerView: UIView {
         topView.snp.makeConstraints { make in
             make.leading.equalTo(0)
             make.trailing.equalTo(0)
-            make.top.equalTo(0)
+            make.top.equalTo(92)
             make.height.equalTo(UIScreen.main.bounds.height / 5)
         }
         bigView.snp.makeConstraints { make in
