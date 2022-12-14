@@ -7,8 +7,8 @@
 
 
 final class SearchModulBuider {
-    static func build(delegate: MainPresenterDelegate) -> SearchViewController {
-        let interctor = SearchInteractor()
+    static func build(delegate: MainPresenterDelegate, netManager: NetworkManagerProtocol) -> SearchViewController {
+        let interctor = SearchInteractor(network: netManager)
         let presenter = SearchPresenter(interactor: interctor, delegate: delegate)
         let viewController = SearchViewController(presenter: presenter)
         presenter.view = viewController
