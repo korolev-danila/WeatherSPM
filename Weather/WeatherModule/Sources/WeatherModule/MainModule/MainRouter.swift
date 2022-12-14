@@ -17,9 +17,9 @@ protocol MainRouterProtocol: AnyObject {
 
 final class MainRouter {
     weak var navigationController: UINavigationController?
-    private let coreDataManager: CoreDataProtocol
+    private let coreDataManager: CoreDataManagerProtocol
     
-    init(coreData: CoreDataProtocol){
+    init(coreData: CoreDataManagerProtocol){
         self.coreDataManager = coreData
     }
     
@@ -37,7 +37,7 @@ extension MainRouter: MainRouterProtocol{
     
     public func pushDetailsView(city: City) {
         if let nc = navigationController {
-            let vc = DetailsModulBuider.build(nc: nc, city: city, coreData: coreDataManager)
+            let vc = DetailsModulBuider.build(nc: nc, city: city, cDManager: coreDataManager)
             print("push Details")
             navigationController?.pushViewController(vc, animated: true)
         }

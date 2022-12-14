@@ -2,88 +2,24 @@
 //  File.swift
 //  
 //
-//  Created by Данила on 21.11.2022.
+//  Created by Данила on 14.12.2022.
 //
 
 import CoreData
 
-protocol CoreDataProtocol: AnyObject {
-    var persistentContainer: NSPersistentContainer { get set }
-}
-
-public final class Country: NSManagedObject {
-    @NSManaged var name: String
-    @NSManaged var isoA2: String
-    @NSManaged var flagData: Data?
-    @NSManaged public var citys: NSSet?
+protocol CoreDataManagerProtocol: AnyObject {
     
-    public var citysArray: [City] {
-        let set = citys as? Set<City> ?? []
-        
-        return set.sorted {
-            $0.name < $1.name
-        }.sorted {
-            $0.isCapital && !$1.isCapital
-        }
-    }
-}
-
-extension Country: Identifiable {
-    
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<Country> {
-        return NSFetchRequest<Country>(entityName: "Country")
-    }
-    
-    @objc(addCitysObject:)
-    @NSManaged public func addToCitys(_ value: City)
-    
-    @objc(removeCitysObject:)
-    @NSManaged public func removeFromCitys(_ value: City)
-    
-    @objc(addCitys:)
-    @NSManaged public func addToCitys(_ values: NSSet)
-    
-    @objc(removeCitys:)
-    @NSManaged public func removeFromCitys(_ values: NSSet)
-}
-
-public final class City: NSManagedObject {
-    @NSManaged var name: String
-    @NSManaged var isCapital: Bool
-    @NSManaged var latitude: Double
-    @NSManaged var longitude: Double
-    @NSManaged var population: Double
-    
-    @NSManaged var country: Country
-    @NSManaged var timeAndTemp: TimeAndTemp
-}
-
-extension City: Identifiable {
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<City> {
-        return NSFetchRequest<City>(entityName: "City")
-    }
-}
-
-public final class TimeAndTemp: NSManagedObject {
-    @NSManaged var temp: Double
-    @NSManaged var utcDiff: Double
-    @NSManaged var isNil: Bool
-    
-    @NSManaged var city: City
-}
-
-extension TimeAndTemp: Identifiable {
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<TimeAndTemp> {
-        return NSFetchRequest<TimeAndTemp>(entityName: "TimeAndTemp")
-    }
+    func fetchCountrys() -> [Country]
+    func resetAllRecords()
+    func deleteCity(_ city: City)
+    func saveContext()
+    func save(_ citySearch: CitySearch) -> City?
 }
 
 
-
-// MARK: - CoreDataProtocol
-final class CoreDataManager: CoreDataProtocol {
+final class CoreDataManager {
    
-    public var persistentContainer: NSPersistentContainer = {
+    private var persistentContainer: NSPersistentContainer = {
         let container = NSPersistentCloudKitContainer(name: "ExampleModel", managedObjectModel: managedObjectModel())
         
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
@@ -98,8 +34,6 @@ final class CoreDataManager: CoreDataProtocol {
     private static func managedObjectModel() -> NSManagedObjectModel {
         
         let model = NSManagedObjectModel()
-        
-        
         
         // MARK: - CountryEntity
         
@@ -225,4 +159,124 @@ final class CoreDataManager: CoreDataProtocol {
         
         return model
     }
+}
+
+
+
+// MARK: - CoreDataManagerProtocol
+extension CoreDataManager: CoreDataManagerProtocol {
+    
+    public func fetchCountrys() -> [Country] {
+        
+        let fetchRequest: NSFetchRequest<Country> = Country.fetchRequest()
+        var countrys: [Country] = []
+        
+        do {
+            countrys = try persistentContainer.viewContext.fetch(fetchRequest)
+          //  presenter?.updateCountrysArray(countrys)
+            
+        } catch let error as NSError {
+            print(error.localizedDescription)
+        }
+        
+        return countrys
+    }
+    
+    public func resetAllRecords() {
+        
+        let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "Country")
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: deleteFetch)
+        do {
+            try persistentContainer.viewContext.execute(deleteRequest)
+            try persistentContainer.viewContext.save()
+        } catch let error as NSError {
+            print(error.localizedDescription)
+        }
+    }
+    
+    public func deleteCity(_ city: City) {
+        
+        if city.country.citysArray.count == 1 {
+            persistentContainer.viewContext.delete(city.country)
+        } else {
+            persistentContainer.viewContext.delete(city)
+        }
+        
+        saveContext()
+    }
+    
+    public func saveContext() {
+        do {
+            try persistentContainer.viewContext.save()
+        } catch let error as NSError {
+            print(error.localizedDescription)
+        }
+    }
+    
+    
+    // MARK: - Save method
+    public func save(_ citySearch: CitySearch) -> City? {
+        
+        func createCity(_ citySearch: CitySearch,_ country: Country) -> City? {
+            guard let cityEntity = NSEntityDescription.entity(forEntityName: "City", in: persistentContainer.viewContext) else { return nil}
+            
+            let city = City(entity: cityEntity , insertInto: persistentContainer.viewContext)
+            city.name = citySearch.name
+            city.country = country
+            city.isCapital = citySearch.isCapital
+            city.latitude = citySearch.latitude
+            city.longitude = citySearch.longitude
+            if citySearch.population != nil {
+                city.population = Double(citySearch.population!)
+            } else {
+                city.population = 0.0
+            }
+            if let timeAndTemp = createTimeAndTemp(for: city) {
+                city.timeAndTemp = timeAndTemp
+            }
+            
+            return city
+        }
+        
+        func createTimeAndTemp(for city: City) -> TimeAndTemp? {
+            guard let timeAndTempEntity = NSEntityDescription.entity(forEntityName: "TimeAndTemp", in: persistentContainer.viewContext) else { return nil }
+            
+            let timeAndTemp = TimeAndTemp(entity: timeAndTempEntity, insertInto: persistentContainer.viewContext)
+            timeAndTemp.city = city
+            timeAndTemp.temp = 0.0
+            timeAndTemp.utcDiff = 0.0
+            timeAndTemp.isNil = true
+            
+            return timeAndTemp
+        }
+        
+        let countrys = fetchCountrys()
+        
+        /// Create only city
+        if let country = countrys.filter({ $0.name == citySearch.country }).first ,
+           country.citysArray.filter({ $0.name == citySearch.name }).first == nil {
+            
+            if let city = createCity(citySearch, country) {
+                saveContext()
+                return city
+            }
+        } else {
+            /// Create country and city
+            guard let entity = NSEntityDescription.entity(forEntityName: "Country", in: persistentContainer.viewContext) else { return nil }
+            
+            let country = Country(entity: entity , insertInto: persistentContainer.viewContext)
+            country.name = citySearch.country
+            
+            if citySearch.isoA2 != nil {
+                country.isoA2 = citySearch.isoA2!
+            }
+            
+            if let city = createCity(citySearch, country) {
+                saveContext()
+                return city
+            }
+        }
+        return nil
+    }
+    
 }

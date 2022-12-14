@@ -8,8 +8,8 @@
 import UIKit
 
 final class DetailsModulBuider {
-    public static func build(nc: UINavigationController, city: City, coreData: CoreDataProtocol) -> DetailsViewController {
-        let interctor = DetailsInteractor(coreData: coreData)
+    public static func build(nc: UINavigationController, city: City, cDManager: CoreDataManagerProtocol) -> DetailsViewController {
+        let interctor = DetailsInteractor(coreData: cDManager)
         let router = DetailsRouter(nc: nc)
         let presenter = DetailsPresenter(interactor: interctor, router: router, city: city)
         let viewController = DetailsViewController(presenter: presenter)

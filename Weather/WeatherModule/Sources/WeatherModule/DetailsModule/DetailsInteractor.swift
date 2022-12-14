@@ -21,11 +21,11 @@ protocol DetailsInteractorOutputProtocol: AnyObject {
 final class DetailsInteractor {
     
     weak var presenter: DetailsInteractorOutputProtocol?
-    private let context: NSManagedObjectContext
+    private let coreDataManager: CoreDataManagerProtocol
 
     
-    init(coreData: CoreDataProtocol){
-        self.context = coreData.persistentContainer.viewContext
+    init(coreData: CoreDataManagerProtocol){
+        self.coreDataManager = coreData
     }
     
     deinit {
@@ -85,11 +85,7 @@ final class DetailsInteractor {
             city.timeAndTemp.utcDiff = weather.info!.tzinfo!.offset!
         }
         
-        do {
-            try context.save()
-        } catch let error as NSError {
-            print(error.localizedDescription)
-        }
+        coreDataManager.saveContext()
     }
 }
 
