@@ -309,7 +309,6 @@ extension DetailsViewController: DetailsViewInputProtocol {
         collectionView.reloadData()
     }
     
-    // MARK: -
     public func reloadTableView() {
         
         newsTableView.reloadData()
