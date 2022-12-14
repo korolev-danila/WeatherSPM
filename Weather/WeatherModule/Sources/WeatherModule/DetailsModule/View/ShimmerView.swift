@@ -136,7 +136,7 @@ final class ShimmerView: UIView {
     
     private let newsLayer = CAGradientLayer()
     
-    private let imageViewHConst: CGFloat = UIScreen.main.bounds.height / 4
+    private let imageViewHConst: CGFloat = 172
     private let imageToCityConst: CGFloat = -12
     private let cityViewHConst: CGFloat = 172
     

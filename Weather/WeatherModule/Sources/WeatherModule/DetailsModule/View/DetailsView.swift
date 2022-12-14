@@ -118,7 +118,7 @@ final class DetailsViewController: UIViewController {
     
     private let shimmerView = ShimmerView()
     
-    private let imageViewHConst: CGFloat = UIScreen.main.bounds.height / 4
+    private let imageViewHConst: CGFloat = 172
     private let imageToCityConst: CGFloat = -12
     private let cityViewHConst: CGFloat = 172
     private let collectionViewHConst: CGFloat = 108
@@ -176,8 +176,8 @@ final class DetailsViewController: UIViewController {
         shimmerView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
             make.bottom.equalToSuperview()
-            make.leading.equalToSuperview()
-            make.trailing.equalToSuperview()
+            make.leading.equalTo(self.view.safeAreaLayoutGuide.snp.leading)
+            make.trailing.equalTo(self.view.safeAreaLayoutGuide.snp.trailing)
         }
     }
     
@@ -236,30 +236,30 @@ final class DetailsViewController: UIViewController {
         
         imageView.snp.makeConstraints { make in
             make.top.equalTo(contentG.snp.top)
-            make.leading.equalTo(self.view.snp.leading)
-            make.trailing.equalTo(self.view.snp.trailing)
+            make.leading.equalTo(self.view.safeAreaLayoutGuide.snp.leading)
+            make.trailing.equalTo(self.view.safeAreaLayoutGuide.snp.trailing)
             make.height.equalTo(imageViewHConst)
         }
         
         cityView.snp.makeConstraints { make in
             make.top.equalTo(imageView.snp.bottom).offset(imageToCityConst)
-            make.leading.equalTo(self.view.snp.leading)
-            make.trailing.equalTo(self.view.snp.trailing)
+            make.leading.equalTo(self.view.safeAreaLayoutGuide.snp.leading)
+            make.trailing.equalTo(self.view.safeAreaLayoutGuide.snp.trailing)
             make.height.equalTo(cityViewHConst)
         }
         
         
         collectionView.snp.makeConstraints { make in
             make.top.equalTo(cityView.snp.bottom)
-            make.leading.equalTo(self.view.snp.leading)
-            make.trailing.equalTo(self.view.snp.trailing)
+            make.leading.equalTo(self.view.safeAreaLayoutGuide.snp.leading)
+            make.trailing.equalTo(self.view.safeAreaLayoutGuide.snp.trailing)
             make.height.equalTo(collectionViewHConst)
         }
         
         newsTableView.snp.makeConstraints { make in
             make.top.equalTo(collectionView.snp.bottom).offset(collToTableConst)
-            make.leading.equalTo(self.view.snp.leading)
-            make.trailing.equalTo(self.view.snp.trailing)
+            make.leading.equalTo(self.view.safeAreaLayoutGuide.snp.leading)
+            make.trailing.equalTo(self.view.safeAreaLayoutGuide.snp.trailing)
         }
     }
     
@@ -319,7 +319,7 @@ extension DetailsViewController: DetailsViewInputProtocol {
     
     public func stopShimmer() {
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
             self.scrollView.isHidden = false
             self.shimmerView.isHidden = true
             self.shimmerView.stopShimmerEffect()
