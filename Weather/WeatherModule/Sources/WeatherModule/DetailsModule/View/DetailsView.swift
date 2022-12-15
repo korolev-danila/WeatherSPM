@@ -40,12 +40,22 @@ final class DetailsViewController: UIViewController {
         let v = UIScrollView()
         v.translatesAutoresizingMaskIntoConstraints = false
         v.backgroundColor = .gray
-        
+
         return v
     }()
     
+    private let stackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.alignment = .fill
+        stackView.distribution = .fill
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        return stackView
+    }()
+    
     private let scrollUpButton: UIButton = {
-        let button = UIButton(frame: CGRect(x: 0, y: 0, width: 68, height: 44))
+        let button = UIButton()
         button.setTitle("Scroll Up", for: .normal)
         button.layer.cornerRadius = 12
         button.backgroundColor = .blue
@@ -59,7 +69,7 @@ final class DetailsViewController: UIViewController {
     
     private let imageView: UIImageView = {
         let iView = UIImageView()
-        iView.backgroundColor = .clear
+        iView.backgroundColor = .yellow
         iView.contentMode = .scaleToFill
         iView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -140,26 +150,19 @@ final class DetailsViewController: UIViewController {
         super.viewDidLoad()
         
         setupShimmerView()
-        setupBarButton()
         
-       
+        setupNavBar()
+        setupScrollView()
+
         presenter.viewDidLoad()
     }
     
     public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
+
         shimmerView.startShimmerEffect()
-    }
-    
-    override func viewDidLayoutSubviews() {
-        
-        setupScrollView()
         setupViews()
-        setupScrollUpButton()
-        setupContentSizeOfScroll()
     }
-    
     
     deinit {
         print("deinit DetailsViewController")
@@ -181,20 +184,20 @@ final class DetailsViewController: UIViewController {
         }
     }
     
-    private func setupBarButton() {
+    private func setupNavBar() {
         self.navigationController?.interactivePopGestureRecognizer?.delegate = self
         view.backgroundColor = .white
     }
     
     private func setupScrollView(){
-        
+
         view.addSubview(scrollView)
         scrollView.delegate = self
-        
-        
+
+
         let safeG = view.safeAreaLayoutGuide
-        
-        
+
+
         scrollView.snp.makeConstraints { make in
             make.top.equalTo(safeG.snp.top)
             make.bottom.equalTo(safeG.snp.bottom)
@@ -203,20 +206,23 @@ final class DetailsViewController: UIViewController {
         }
     }
     
-    private func setupScrollUpButton() {
-        scrollUpButton.addTarget(self, action: #selector(scrollButtonTapped), for: .touchUpInside)
+    private func setupStackView() {
         
-        view.addSubview(scrollUpButton)
+        scrollView.addSubview(stackView)
         
-        scrollUpButton.snp.makeConstraints { make in
-            make.top.equalTo(self.view.snp.top).offset(100)
-            make.centerX.equalTo(self.view.snp.centerX)
-            make.width.equalTo(88)
+        let contentG = scrollView.contentLayoutGuide
+
+        stackView.snp.makeConstraints { make in
+            make.top.equalTo(contentG.snp.top)
+            make.bottom.equalTo(contentG.snp.bottom)
+            make.leading.equalTo(contentG.snp.leading)
+            make.trailing.equalTo(contentG.snp.trailing)
         }
     }
     
     private func setupViews() {
         
+        setupStackView()
         
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -225,49 +231,49 @@ final class DetailsViewController: UIViewController {
         newsTableView.delegate = self
         newsTableView.dataSource = self
         newsTableView.estimatedRowHeight = 80
+       
+        scrollView.addSubview(scrollUpButton)
         
-        let contentG = scrollView.contentLayoutGuide
-        
-        scrollView.addSubview(imageView)
-        scrollView.addSubview(cityView)
-        scrollView.addSubview(collectionView)
-        scrollView.addSubview(newsTableView)
+        scrollUpButton.addTarget(self, action: #selector(scrollButtonTapped), for: .touchUpInside)
+
+        scrollUpButton.snp.makeConstraints { make in
+            make.top.equalTo(view.snp.top).offset(100)
+            make.centerX.equalTo(scrollView.snp.centerX)
+            make.width.equalTo(88)
+            make.height.equalTo(44)
+        }
                 
-        
+        stackView.addArrangedSubview(imageView)
+        stackView.setCustomSpacing(imageToCityConst, after: imageView)
+        stackView.addArrangedSubview(cityView)
+
+        stackView.addArrangedSubview(collectionView)
+        stackView.setCustomSpacing(collToTableConst, after: collectionView)
+        stackView.addArrangedSubview(newsTableView)
+
         imageView.snp.makeConstraints { make in
-            make.top.equalTo(contentG.snp.top)
             make.leading.equalTo(self.view.safeAreaLayoutGuide.snp.leading)
             make.trailing.equalTo(self.view.safeAreaLayoutGuide.snp.trailing)
             make.height.equalTo(imageViewHConst)
         }
-        
+
         cityView.snp.makeConstraints { make in
-            make.top.equalTo(imageView.snp.bottom).offset(imageToCityConst)
             make.leading.equalTo(self.view.safeAreaLayoutGuide.snp.leading)
             make.trailing.equalTo(self.view.safeAreaLayoutGuide.snp.trailing)
             make.height.equalTo(cityViewHConst)
         }
-        
-        
+
+
         collectionView.snp.makeConstraints { make in
-            make.top.equalTo(cityView.snp.bottom)
             make.leading.equalTo(self.view.safeAreaLayoutGuide.snp.leading)
             make.trailing.equalTo(self.view.safeAreaLayoutGuide.snp.trailing)
             make.height.equalTo(collectionViewHConst)
         }
-        
+
         newsTableView.snp.makeConstraints { make in
-            make.top.equalTo(collectionView.snp.bottom).offset(collToTableConst)
             make.leading.equalTo(self.view.safeAreaLayoutGuide.snp.leading)
             make.trailing.equalTo(self.view.safeAreaLayoutGuide.snp.trailing)
         }
-    }
-    
-    private func setupContentSizeOfScroll() {
-        
-        let scrollViewH = imageViewHConst + imageToCityConst + cityViewHConst + collectionViewHConst + collToTableConst
-        
-        scrollView.contentSize = CGSize(width:self.view.frame.size.width, height: scrollViewH + newsTableView.frame.size.height)
     }
     
     // MARK: - Action scrollButtonTapped
@@ -313,8 +319,6 @@ extension DetailsViewController: DetailsViewInputProtocol {
         
         newsTableView.reloadData()
         newsTableView.invalidateIntrinsicContentSize()
-        setupContentSizeOfScroll()
-                
     }
     
     public func stopShimmer() {
@@ -337,7 +341,7 @@ extension DetailsViewController: UIScrollViewDelegate {
         guard scrollView == self.scrollView else {
             return
         }
-        
+
         if scrollView.bounds.intersects(collectionView.frame) == true  {
             scrollUpButton.isHidden = true
         } else if scrollView.contentOffset.y > 0 {
@@ -408,7 +412,7 @@ extension DetailsViewController: UITableViewDelegate, UITableViewDataSource {
 //    }
     
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return presenter.newsCount()
+        return  presenter.newsCount()
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -447,7 +451,7 @@ extension DetailsViewController: UITableViewDelegate, UITableViewDataSource {
 
 
 // MARK: - UIGestureRecognizerDelegate
-extension DetailsViewController:UIGestureRecognizerDelegate {
+extension DetailsViewController: UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
     }

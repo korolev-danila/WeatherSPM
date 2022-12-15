@@ -112,8 +112,8 @@ final class SearchViewController: UIViewController {
         
         textField.snp.makeConstraints { make in
             make.top.equalTo(8)
-            make.leading.equalTo(10)
-            make.trailing.equalTo(-10)
+            make.leading.equalTo(self.view.safeAreaLayoutGuide.snp.leading)
+            make.trailing.equalTo(self.view.safeAreaLayoutGuide.snp.trailing)
             make.height.equalTo(45)
         }
         
