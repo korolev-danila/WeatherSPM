@@ -16,6 +16,7 @@ final class SearchCell: UITableViewCell {
         let label = UILabel()
         label.text = "Name label"
         label.font = UIFont.systemFont(ofSize: 17)
+        label.textColor = .label
         label.adjustsFontSizeToFitWidth = true
         label.numberOfLines = 2
         label.minimumScaleFactor = 0.2
@@ -30,7 +31,7 @@ final class SearchCell: UITableViewCell {
         let label = UILabel()
         label.text = "Country label"
         label.font = UIFont.systemFont(ofSize: 15)
-        label.textColor = .systemGray
+        label.textColor = .secondaryLabel
         label.adjustsFontSizeToFitWidth = true
         label.numberOfLines = 3
         label.minimumScaleFactor = 0.02

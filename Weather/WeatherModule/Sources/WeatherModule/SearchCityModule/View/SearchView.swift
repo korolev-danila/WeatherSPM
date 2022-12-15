@@ -43,6 +43,7 @@ final class SearchViewController: UIViewController {
         let tf = UITextField()
         tf.placeholder = "Search City"
         tf.font = UIFont.systemFont(ofSize: 20)
+        tf.backgroundColor = .clear
         tf.layer.cornerRadius = 15.0
         tf.layer.borderWidth = 2.0
         tf.layer.borderColor = UIColor.gray.cgColor
@@ -95,7 +96,7 @@ final class SearchViewController: UIViewController {
     
     private func setupViews() {
         
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
         
         view.addSubview(textField)
         view.addSubview(tableView)

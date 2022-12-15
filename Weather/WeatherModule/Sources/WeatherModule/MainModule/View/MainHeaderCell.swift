@@ -14,7 +14,7 @@ final class HeaderView: UIView {
         label.backgroundColor = .clear
         label.font = .systemFont(ofSize: 12)
         label.font = UIFont.preferredFont(forTextStyle: .title3)
-        label.textColor = .black
+        label.textColor = .label
         
         return label
     }()
@@ -60,8 +60,8 @@ final class HeaderView: UIView {
     
         self.backgroundColor = UIColor.clear
         self.layer.cornerRadius = 15.0
-        self.layer.borderWidth = 1.0
-        self.layer.borderColor = UIColor.clear.cgColor
+       // self.layer.borderWidth = 1.0
+       // self.layer.borderColor = UIColor.clear.cgColor
         self.clipsToBounds = true
         
         gradientLayer.frame = self.bounds

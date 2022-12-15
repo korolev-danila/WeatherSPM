@@ -38,16 +38,6 @@ final class NewsCell: UITableViewCell {
         return label
     }()
     
-//    private let descriptionTextView: UITextView = {
-//        let textView = UITextView()
-//        textView.text = "Nine days since the killings of four college students attending the University of Idaho, police have not arrested any suspect, but are \"definitely making progress,\" according to an outside public information officer."
-//        textView.font = UIFont.systemFont(ofSize: 15)
-//        textView.textColor = .systemGray
-//        textView.translatesAutoresizingMaskIntoConstraints = false
-//
-//        return textView
-//    }()
-    
     // MARK: - Init
     override init( style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init( style: style, reuseIdentifier: reuseIdentifier)
@@ -63,7 +53,6 @@ final class NewsCell: UITableViewCell {
         
         contentView.addSubview(dateLabel)
         contentView.addSubview(titleLabel)
-       // self.addSubview(descriptionTextView)
         
         dateLabel.snp.makeConstraints { make in
             make.leading.equalTo(8)
@@ -78,13 +67,6 @@ final class NewsCell: UITableViewCell {
             make.top.equalTo(2)
             make.bottom.equalTo(0)
         }
-        
-//        descriptionTextView.snp.makeConstraints { make in
-//            make.leading.equalTo(8)
-//            make.trailing.equalTo(-8)
-//            make.top.equalTo(titleLabel.snp.bottom)
-//            make.bottom.equalTo(0)
-//        }
     }
     
     
@@ -92,7 +74,6 @@ final class NewsCell: UITableViewCell {
         
         dateLabel.text = viewModel.date
         titleLabel.text = viewModel.title
-     //   descriptionTextView.text = viewModel.description.htmlToString
         
     }
 }

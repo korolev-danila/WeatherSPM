@@ -39,7 +39,7 @@ final class DetailsViewController: UIViewController {
     private let scrollView: UIScrollView = {
         let v = UIScrollView()
         v.translatesAutoresizingMaskIntoConstraints = false
-        v.backgroundColor = .gray
+        v.backgroundColor = .tertiaryLabel
 
         return v
     }()
@@ -58,7 +58,7 @@ final class DetailsViewController: UIViewController {
         let button = UIButton()
         button.setTitle("Scroll Up", for: .normal)
         button.layer.cornerRadius = 12
-        button.backgroundColor = .blue
+        button.backgroundColor = .systemBlue
         button.clipsToBounds = false
         button.isHidden = true
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -78,7 +78,7 @@ final class DetailsViewController: UIViewController {
     
     private var cityView: CitySubView = {
         let view = CitySubView()
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
         view.layer.cornerRadius = 12
         view.layer.borderWidth = 2.0
         view.layer.borderColor = UIColor.gray.cgColor
@@ -186,7 +186,7 @@ final class DetailsViewController: UIViewController {
     
     private func setupNavBar() {
         self.navigationController?.interactivePopGestureRecognizer?.delegate = self
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
     }
     
     private func setupScrollView(){

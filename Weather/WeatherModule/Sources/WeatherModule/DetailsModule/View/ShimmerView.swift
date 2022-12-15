@@ -10,6 +10,8 @@ import SnapKit
 
 final class ShimmerView: UIView {
     
+    let backColor = UIColor.systemBackground//UIColor(white: 0.85, alpha: 1.0)
+    
     private let topView: UIView = {
         let view = UIView()
         view.backgroundColor = .clear
@@ -20,7 +22,6 @@ final class ShimmerView: UIView {
     
     private let bigView: UIView = {
         let view = UIView()
-        view.backgroundColor = .lightGray
         view.layer.cornerRadius = 15
         view.layer.masksToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -30,7 +31,7 @@ final class ShimmerView: UIView {
     
     private let cityView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor(white: 0.85, alpha: 1.0)
+       // view.backgroundColor =
         view.layer.cornerRadius = 12
         view.layer.masksToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -42,7 +43,6 @@ final class ShimmerView: UIView {
     
     private let cell1View: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor(white: 0.85, alpha: 1.0)
         view.layer.cornerRadius = 10
         view.layer.masksToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -54,7 +54,6 @@ final class ShimmerView: UIView {
     
     private let cell2View: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor(white: 0.85, alpha: 1.0)
         view.layer.cornerRadius = 10
         view.layer.masksToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -66,7 +65,6 @@ final class ShimmerView: UIView {
     
     private let cell3View: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor(white: 0.85, alpha: 1.0)
         view.layer.cornerRadius = 10
         view.layer.masksToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -78,7 +76,6 @@ final class ShimmerView: UIView {
     
     private let cell4View: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor(white: 0.85, alpha: 1.0)
         view.layer.cornerRadius = 10
         view.layer.masksToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -90,7 +87,6 @@ final class ShimmerView: UIView {
     
     private let cell5View: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor(white: 0.85, alpha: 1.0)
         view.layer.cornerRadius = 10
         view.layer.masksToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -102,7 +98,6 @@ final class ShimmerView: UIView {
     
     private let cell6View: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor(white: 0.85, alpha: 1.0)
         view.layer.cornerRadius = 10
         view.layer.masksToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -114,7 +109,6 @@ final class ShimmerView: UIView {
     
     private let cell7View: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor(white: 0.85, alpha: 1.0)
         view.layer.cornerRadius = 10
         view.layer.masksToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -126,7 +120,6 @@ final class ShimmerView: UIView {
     
     private let newsView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor(white: 0.85, alpha: 1.0)
         view.layer.cornerRadius = 15
         view.layer.masksToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -153,7 +146,7 @@ final class ShimmerView: UIView {
     }
     
     private func setupViews() {
-        backgroundColor = .white 
+        backgroundColor = .systemBackground
         
         addSubview(topView)
         addSubview(bigView)
@@ -169,6 +162,17 @@ final class ShimmerView: UIView {
         
         bigView.addSubview(newsView)
         
+        bigView.backgroundColor = .tertiaryLabel
+        cityView.backgroundColor = backColor
+        cell1View.backgroundColor = backColor
+        cell2View.backgroundColor = backColor
+        cell3View.backgroundColor = backColor
+        cell4View.backgroundColor = backColor
+        cell5View.backgroundColor = backColor
+        cell6View.backgroundColor = backColor
+        cell7View.backgroundColor = backColor
+        newsView.backgroundColor = backColor
+        
         topView.snp.makeConstraints { make in
             make.leading.equalTo(0)
             make.trailing.equalTo(0)
@@ -182,9 +186,9 @@ final class ShimmerView: UIView {
             make.height.equalTo(self.snp.height)
         }
         cityView.snp.makeConstraints { make in
-            make.leading.equalToSuperview()
-            make.trailing.equalToSuperview()
-            make.top.equalToSuperview()
+            make.leading.equalToSuperview().offset(2)
+            make.trailing.equalToSuperview().offset(-2)
+            make.top.equalToSuperview().offset(2)
             make.height.equalTo(cityViewHConst)
         }
         cell1View.snp.makeConstraints { make in
@@ -230,8 +234,8 @@ final class ShimmerView: UIView {
             make.height.equalTo(100)
         }
         newsView.snp.makeConstraints { make in
-            make.leading.equalToSuperview()
-            make.trailing.equalToSuperview()
+            make.leading.equalToSuperview().offset(2)
+            make.trailing.equalToSuperview().offset(-2)
             make.height.equalTo(400)
             make.top.equalTo(cell1View.snp.bottom).offset(8)
         }
@@ -253,8 +257,8 @@ final class ShimmerView: UIView {
     // MARK: - Public method
     public func startShimmerEffect() {
         
-        let gradientColorOne : CGColor = UIColor(white: 0.85, alpha: 1.0).cgColor
-        let gradientColorTwo : CGColor = UIColor(white: 0.95, alpha: 1.0).cgColor
+        let gradientColorOne : CGColor = backColor.cgColor //UIColor(white: 0.85, alpha: 1.0)
+        let gradientColorTwo : CGColor = UIColor.secondarySystemBackground.cgColor //  UIColor(white: 0.95, alpha: 1.0)
         
         let animation = addAnimation()
         
@@ -279,64 +283,6 @@ final class ShimmerView: UIView {
         config(view: cell6View, layer: cell6Layer)
         config(view: cell7View, layer: cell7Layer)
         config(view: newsView, layer: newsLayer)
-
-        
-//        cityLayer.frame = cityView.bounds
-//        cityLayer.cornerRadius = cityView.layer.cornerRadius
-//        cityLayer.startPoint = CGPoint(x: 0.0, y: 1.0)
-//        cityLayer.endPoint = CGPoint(x: 1.0, y: 1.0)
-//        cityLayer.colors = [gradientColorOne, gradientColorTwo, gradientColorOne]
-//        cityLayer.locations = [0.0, 0.5, 1.0]
-//        cityView.layer.addSublayer(cityLayer)
-        
-//        cell1Layer.frame = cell1View.bounds
-//        cell1Layer.cornerRadius = cell1View.layer.cornerRadius
-//        cell1Layer.startPoint = CGPoint(x: 0.0, y: 1.0)
-//        cell1Layer.endPoint = CGPoint(x: 1.0, y: 1.0)
-//        cell1Layer.colors = [gradientColorOne, gradientColorTwo, gradientColorOne]
-//        cell1Layer.locations = [0.0, 0.5, 1.0]
-//        cell1View.layer.addSublayer(cell1Layer)
-        
-//        cell2Layer.frame = cell2View.bounds
-//        cell2Layer.cornerRadius = cell2View.layer.cornerRadius
-//        cell2Layer.startPoint = CGPoint(x: 0.0, y: 1.0)
-//        cell2Layer.endPoint = CGPoint(x: 1.0, y: 1.0)
-//        cell2Layer.colors = [gradientColorOne, gradientColorTwo, gradientColorOne]
-//        cell2Layer.locations = [0.0, 0.5, 1.0]
-//        cell2View.layer.addSublayer(cell2Layer)
-        
-//        cell3Layer.frame = cell3View.bounds
-//        cell3Layer.cornerRadius = cell3View.layer.cornerRadius
-//        cell3Layer.startPoint = CGPoint(x: 0.0, y: 1.0)
-//        cell3Layer.endPoint = CGPoint(x: 1.0, y: 1.0)
-//        cell3Layer.colors = [gradientColorOne, gradientColorTwo, gradientColorOne]
-//        cell3Layer.locations = [0.0, 0.5, 1.0]
-//        cell3View.layer.addSublayer(cell3Layer)
-//
-//        cell4Layer.frame = cell4View.bounds
-//        cell4Layer.cornerRadius = cell4View.layer.cornerRadius
-//        cell4Layer.startPoint = CGPoint(x: 0.0, y: 1.0)
-//        cell4Layer.endPoint = CGPoint(x: 1.0, y: 1.0)
-//        cell4Layer.colors = [gradientColorOne, gradientColorTwo, gradientColorOne]
-//        cell4Layer.locations = [0.0, 0.5, 1.0]
-//        cell4View.layer.addSublayer(cell4Layer)
-//
-//        newsLayer.frame = newsView.bounds
-//        newsLayer.cornerRadius = newsView.layer.cornerRadius
-//        newsLayer.startPoint = CGPoint(x: 0.0, y: 1.0)
-//        newsLayer.endPoint = CGPoint(x: 1.0, y: 1.0)
-//        newsLayer.colors = [gradientColorOne, gradientColorTwo, gradientColorOne]
-//        newsLayer.locations = [0.0, 0.5, 1.0]
-//        newsView.layer.addSublayer(newsLayer)
-//
-//
-//
-//        cityLayer.add(animation, forKey: animation.keyPath)
-//        cell1Layer.add(animation, forKey: animation.keyPath)
-//        cell2Layer.add(animation, forKey: animation.keyPath)
-//        cell3Layer.add(animation, forKey: animation.keyPath)
-//        cell4Layer.add(animation, forKey: animation.keyPath)
-//        newsLayer.add(animation, forKey: animation.keyPath)
         
     }
     

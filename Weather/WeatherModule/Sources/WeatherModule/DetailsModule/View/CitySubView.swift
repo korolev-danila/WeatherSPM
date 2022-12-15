@@ -27,7 +27,7 @@ final class CitySubView: UIView {
         let imageView = UIImageView()
         imageView.backgroundColor = .lightGray
         imageView.image = UIImage(systemName: "star.fill")
-        imageView.tintColor = .yellow
+        imageView.tintColor = .systemYellow
         imageView.contentMode = .center
         imageView.layer.cornerRadius = 11
         imageView.layer.masksToBounds = true
@@ -147,7 +147,7 @@ final class CitySubView: UIView {
         let label = UILabel()
         label.text = "day:"
         label.font = UIFont.systemFont(ofSize: 15)
-        label.textColor = .gray
+        label.textColor = .secondaryLabel
         label.adjustsFontSizeToFitWidth = true
         label.numberOfLines = 1
         label.minimumScaleFactor = 0.2
@@ -162,7 +162,7 @@ final class CitySubView: UIView {
         let label = UILabel()
         label.text = "night:"
         label.font = UIFont.systemFont(ofSize: 15)
-        label.textColor = .gray
+        label.textColor = .secondaryLabel
         label.adjustsFontSizeToFitWidth = true
         label.numberOfLines = 1
         label.minimumScaleFactor = 0.2
@@ -227,7 +227,7 @@ final class CitySubView: UIView {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 15)
         label.backgroundColor = .clear
-        label.textColor = .gray
+        label.textColor = .secondaryLabel
         label.textAlignment  = .left
         label.adjustsFontSizeToFitWidth = true
         label.numberOfLines = 1
@@ -322,7 +322,7 @@ final class CitySubView: UIView {
     private let pressureMmTextLabel: UILabel = {
         let label = UILabel()
         label.backgroundColor = .clear
-        label.textColor = .gray
+        label.textColor = .secondaryLabel
         label.font = UIFont.systemFont(ofSize: 15)
         label.textAlignment  = .right
         label.text = "Pressure:"
@@ -345,7 +345,7 @@ final class CitySubView: UIView {
         let label = UILabel()
         label.backgroundColor = .clear
         label.font = UIFont.systemFont(ofSize: 15)
-        label.textColor = .gray
+        label.textColor = .secondaryLabel
         label.textAlignment  = .right
         label.text = "Humidity:"
         label.translatesAutoresizingMaskIntoConstraints = false

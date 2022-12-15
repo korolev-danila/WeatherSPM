@@ -99,7 +99,7 @@ final class MainViewController: UIViewController {
      
     private func setupViews() {
         
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
         
         view.addSubview(tableView)
         view.addSubview(searchButton)
@@ -136,7 +136,7 @@ final class MainViewController: UIViewController {
         let editBarButton = UIButton(frame: CGRect(x: 0, y: 0, width: 44, height: 30))
         editBarButton.setTitle("edit", for: .normal)
         editBarButton.layer.cornerRadius = 12
-        editBarButton.backgroundColor = UIColor.lightGray
+        editBarButton.backgroundColor = .secondaryLabel
         editBarButton.addTarget(self, action: #selector(editButtonTap), for: .touchUpInside)
         
         let leftButton = UIBarButtonItem(customView: editBarButton)
@@ -217,7 +217,6 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("Num: \(indexPath.row)")
         if deleteIsHidden {
             self.navigationController?.navigationBar.prefersLargeTitles = false
             presenter.showDetails(index: indexPath)
@@ -286,7 +285,6 @@ extension MainViewController: MainViewCellDelegate {
             
             if countOfCitys == 1 {
                 let indexSet = IndexSet(arrayLiteral: indexPath.section)
-                print(indexSet)
                 tableView.deleteSections(indexSet, with: .right)
             } else {
                 tableView.deleteRows(at: [indexPath], with: .right)

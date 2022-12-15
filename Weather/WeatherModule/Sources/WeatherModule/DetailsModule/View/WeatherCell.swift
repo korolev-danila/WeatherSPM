@@ -108,7 +108,7 @@ final class CollectionCell: UICollectionViewCell {
     private let dayTempLabel: UILabel = {
         let label = UILabel()
         label.text = "36"
-        label.backgroundColor = .white
+        label.backgroundColor = .clear
         label.font = UIFont.systemFont(ofSize: 18)
         label.adjustsFontSizeToFitWidth = true
         label.numberOfLines = 1
@@ -133,7 +133,7 @@ final class CollectionCell: UICollectionViewCell {
     private let nightTempLabel: UILabel = {
         let label = UILabel()
         label.text = "-12"
-        label.backgroundColor = .white
+        label.backgroundColor = .clear
         label.font = UIFont.systemFont(ofSize: 18)
         label.adjustsFontSizeToFitWidth = true
         label.numberOfLines = 1
@@ -167,7 +167,7 @@ final class CollectionCell: UICollectionViewCell {
     
     func setupViews() {
         
-        backgroundColor = .white
+        backgroundColor = .systemBackground
         
         contentView.addSubview(dateLabel)
         contentView.addSubview(dayOfTheWeekLabel)
