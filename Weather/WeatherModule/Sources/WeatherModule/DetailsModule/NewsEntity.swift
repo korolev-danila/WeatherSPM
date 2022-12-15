@@ -5,7 +5,6 @@
 //  Created by Данила on 04.12.2022.
 //
 
-import Foundation
 
 
 struct News: Decodable {

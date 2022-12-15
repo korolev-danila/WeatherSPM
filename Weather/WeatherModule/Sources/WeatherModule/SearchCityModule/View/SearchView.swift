@@ -5,8 +5,6 @@
 //  Created by Данила on 18.11.2022.
 //
 
-import Foundation
-
 import UIKit
 import SnapKit
 
@@ -31,6 +29,16 @@ final class SearchViewController: UIViewController {
     private let presenter: SearchViewOutputProtocol
     
     private var search: String = ""
+    
+    private let cancelButton: UIButton = {
+        let button = UIButton(frame: CGRect(x: 0, y: 0, width: 66, height: 30))
+        button.setTitle("Cancel", for: .normal)
+        button.setTitleColor(.label, for: .normal)
+        button.addTarget(self, action: #selector(cancelPress), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        
+        return button
+    }()
     
     private let activityView: UIActivityIndicatorView = {
         
@@ -99,6 +107,7 @@ final class SearchViewController: UIViewController {
         view.backgroundColor = .systemBackground
         
         view.addSubview(textField)
+        view.addSubview(cancelButton)
         view.addSubview(tableView)
         view.addSubview(activityView)
         
@@ -106,16 +115,24 @@ final class SearchViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         
+        
         activityView.snp.makeConstraints { make in
-            make.centerX.equalTo(self.view.snp.centerX)
-            make.centerY.equalTo(self.view.snp.centerY).offset(-75)
+            make.centerX.equalTo(view.snp.centerX)
+            make.centerY.equalTo(view.snp.centerY).offset(-75)
         }
         
         textField.snp.makeConstraints { make in
             make.top.equalTo(8)
-            make.leading.equalTo(self.view.safeAreaLayoutGuide.snp.leading)
-            make.trailing.equalTo(self.view.safeAreaLayoutGuide.snp.trailing)
-            make.height.equalTo(45)
+            make.leading.equalTo(view.safeAreaLayoutGuide.snp.leading)
+            make.trailing.equalTo(cancelButton.snp.leading)
+            make.height.equalTo(44)
+        }
+        
+        cancelButton.snp.makeConstraints { make in
+            make.top.equalTo(8)
+            make.trailing.equalTo(view.safeAreaLayoutGuide.snp.trailing)
+            make.width.equalTo(66)
+            make.height.equalTo(44)
         }
         
         tableView.snp.makeConstraints { make in
@@ -124,6 +141,10 @@ final class SearchViewController: UIViewController {
             make.leading.equalTo(view.snp_leadingMargin)
             make.trailing.equalTo(view.snp_trailingMargin)
         }
+    }
+    
+    @objc func cancelPress() {
+        self.dismiss(animated: true, completion: nil)
     }
 }
 

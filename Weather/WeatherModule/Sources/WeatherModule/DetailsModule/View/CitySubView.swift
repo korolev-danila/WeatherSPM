@@ -364,6 +364,9 @@ final class CitySubView: UIView {
         return label
     }()
     
+    
+    
+    // MARK: - Init
     override init( frame: CGRect) {
         super.init(frame: frame)
         
@@ -487,7 +490,7 @@ final class CitySubView: UIView {
         dayTempLabel.snp.makeConstraints { make in
             make.centerY.equalTo(dayTextLabel.snp.centerY)
             make.height.equalTo(19)
-            make.leading.equalTo(dayTextLabel.snp.trailing) //.offset(2)
+            make.leading.equalTo(dayTextLabel.snp.trailing)
             make.width.equalTo(26)
         }
         dayCLabel.snp.makeConstraints { make in
@@ -586,6 +589,9 @@ final class CitySubView: UIView {
         }
     }
     
+    
+    
+    // MARK: - Public method
     public func configureCityView(_ model: CityViewModel) {
         
         nameCityLabel.text = model.cityName

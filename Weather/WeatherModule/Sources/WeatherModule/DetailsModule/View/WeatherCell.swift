@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 import WebKit
 
-final class CollectionCell: UICollectionViewCell {
+final class WeatherCell: UICollectionViewCell {
     
     private let webView: WKWebView = {
         let preferences = WKPreferences()
@@ -175,8 +175,8 @@ final class CollectionCell: UICollectionViewCell {
         contentView.addSubview(webView)
         contentView.addSubview(iconActivityView)
         
-        self.vcWebDelegate.webView = webView
-        self.vcWebDelegate.iconActivityView = iconActivityView
+        vcWebDelegate.webView = webView
+        vcWebDelegate.iconActivityView = iconActivityView
 
         
         tempView.addSubview(dayTextLabel)
@@ -269,9 +269,9 @@ final class CollectionCell: UICollectionViewCell {
         dayOfTheWeekLabel.text = viewModel.week
         
         if viewModel.svgStr != "" {
-            self.iconActivityView.isHidden = false
-            self.iconActivityView.startAnimating()
-            self.webView.isHidden = true
+            iconActivityView.isHidden = false
+            iconActivityView.startAnimating()
+            webView.isHidden = true
             vcWebDelegate.setDelegate()
             webView.loadHTMLString(viewModel.svgStr, baseURL: nil)
         }

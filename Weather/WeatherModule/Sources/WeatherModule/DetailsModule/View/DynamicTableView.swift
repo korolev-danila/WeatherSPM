@@ -7,7 +7,7 @@
 
 import UIKit
 
-class DynamicTableView: UITableView {
+final class DynamicTableView: UITableView {
 
     var dynamicRowHeight: CGFloat = UITableView.automaticDimension {
         didSet {

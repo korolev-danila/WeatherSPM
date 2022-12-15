@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SnapKit
 
 protocol MainViewCellDelegate: AnyObject {
     func delete(cell: MainCell)

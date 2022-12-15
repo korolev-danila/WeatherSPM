@@ -5,7 +5,6 @@
 //  Created by Данила on 18.11.2022.
 //
 
-import Foundation
 
 
 protocol SearchInteractorInputProtocol {

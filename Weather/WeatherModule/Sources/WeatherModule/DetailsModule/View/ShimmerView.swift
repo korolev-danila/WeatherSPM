@@ -10,7 +10,7 @@ import SnapKit
 
 final class ShimmerView: UIView {
     
-    let backColor = UIColor.systemBackground//UIColor(white: 0.85, alpha: 1.0)
+    let backColor = UIColor.systemBackground
     
     private let topView: UIView = {
         let view = UIView()
@@ -31,7 +31,6 @@ final class ShimmerView: UIView {
     
     private let cityView: UIView = {
         let view = UIView()
-       // view.backgroundColor =
         view.layer.cornerRadius = 12
         view.layer.masksToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -257,8 +256,8 @@ final class ShimmerView: UIView {
     // MARK: - Public method
     public func startShimmerEffect() {
         
-        let gradientColorOne : CGColor = backColor.cgColor //UIColor(white: 0.85, alpha: 1.0)
-        let gradientColorTwo : CGColor = UIColor.secondarySystemBackground.cgColor //  UIColor(white: 0.95, alpha: 1.0)
+        let gradientColorOne : CGColor = backColor.cgColor
+        let gradientColorTwo : CGColor = UIColor.secondarySystemBackground.cgColor
         
         let animation = addAnimation()
         

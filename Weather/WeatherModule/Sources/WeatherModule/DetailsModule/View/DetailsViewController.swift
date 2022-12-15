@@ -58,7 +58,7 @@ final class DetailsViewController: UIViewController {
         let button = UIButton()
         button.setTitle("Scroll Up", for: .normal)
         button.layer.cornerRadius = 12
-        button.backgroundColor = .systemBlue
+        button.backgroundColor = .blue
         button.clipsToBounds = false
         button.isHidden = true
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -69,7 +69,7 @@ final class DetailsViewController: UIViewController {
     
     private let imageView: UIImageView = {
         let iView = UIImageView()
-        iView.backgroundColor = .yellow
+        iView.backgroundColor = .clear
         iView.contentMode = .scaleToFill
         iView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -95,7 +95,7 @@ final class DetailsViewController: UIViewController {
         let collection = UICollectionView(frame: CGRect.zero,
                                           collectionViewLayout: layout)
         layout.scrollDirection = .horizontal
-        collection.register(CollectionCell.self, forCellWithReuseIdentifier: "cell")
+        collection.register(WeatherCell.self, forCellWithReuseIdentifier: "cell")
         collection.backgroundColor = .clear
         collection.translatesAutoresizingMaskIntoConstraints = false
         
@@ -135,6 +135,7 @@ final class DetailsViewController: UIViewController {
     private let collToTableConst: CGFloat = 2
     
     
+    
     // MARK: - initialize & viewDidLoad
     init(presenter: DetailsViewOutputProtocol) {
         self.presenter = presenter
@@ -149,18 +150,16 @@ final class DetailsViewController: UIViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         
-        setupShimmerView()
-        
         setupNavBar()
+        setupShimmerView()
         setupScrollView()
-
-        presenter.viewDidLoad()
     }
     
     public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
         shimmerView.startShimmerEffect()
+        presenter.viewDidLoad()
         setupViews()
     }
     
@@ -237,7 +236,7 @@ final class DetailsViewController: UIViewController {
         scrollUpButton.addTarget(self, action: #selector(scrollButtonTapped), for: .touchUpInside)
 
         scrollUpButton.snp.makeConstraints { make in
-            make.top.equalTo(view.snp.top).offset(100)
+            make.top.equalTo(view.snp.top).offset(80)
             make.centerX.equalTo(scrollView.snp.centerX)
             make.width.equalTo(88)
             make.height.equalTo(44)
@@ -323,7 +322,7 @@ extension DetailsViewController: DetailsViewInputProtocol {
     
     public func stopShimmer() {
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             self.scrollView.isHidden = false
             self.shimmerView.isHidden = true
             self.shimmerView.stopShimmerEffect()
@@ -370,7 +369,7 @@ extension DetailsViewController: UICollectionViewDelegate, UICollectionViewDataS
     }
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CollectionCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! WeatherCell
         
         cell.layer.cornerRadius = 15.0
         cell.layer.borderWidth = 2.0

@@ -83,10 +83,9 @@ final class DetailsInteractor {
 // MARK: - DetailsInteractorInputProtocol
 extension DetailsInteractor: DetailsInteractorInputProtocol {
     
-    // MARK: Api request layer
     public func requestWeaher(forCity city: City) {
         
-        networkManager.requestWeaher(lat: city.latitude, long: city.longitude, limit: 7) {[weak self] weather in
+        networkManager.requestWeaher(lat: city.latitude, long: city.longitude, limit: 7) { [weak self] weather in
             self?.presenter?.updateViewWeather(weather)
             self?.updateAndSaveCityWeather(city: city, weather: weather)
             DispatchQueue.main.async {

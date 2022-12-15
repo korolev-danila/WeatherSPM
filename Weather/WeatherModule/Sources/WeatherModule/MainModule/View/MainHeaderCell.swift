@@ -12,7 +12,10 @@ final class HeaderView: UIView {
     private let headerLabel: UILabel = {
         let label = UILabel()
         label.backgroundColor = .clear
-        label.font = .systemFont(ofSize: 12)
+        label.adjustsFontSizeToFitWidth = true
+        label.numberOfLines = 1
+        label.minimumScaleFactor = 0.02
+        label.baselineAdjustment = .alignBaselines
         label.font = UIFont.preferredFont(forTextStyle: .title3)
         label.textColor = .label
         
@@ -58,19 +61,17 @@ final class HeaderView: UIView {
     
     private func setupViews(_ heightOfCell: CGFloat) {
     
-        self.backgroundColor = UIColor.clear
-        self.layer.cornerRadius = 15.0
-       // self.layer.borderWidth = 1.0
-       // self.layer.borderColor = UIColor.clear.cgColor
-        self.clipsToBounds = true
+        backgroundColor = UIColor.clear
+        layer.cornerRadius = 15.0
+        clipsToBounds = true
         
         gradientLayer.frame = self.bounds
-        self.layer.insertSublayer(gradientLayer, at: 1)
+        layer.insertSublayer(gradientLayer, at: 1)
        
         
-        self.addSubview(activityView)
-        self.addSubview(imageView)
-        self.addSubview(headerLabel)
+        addSubview(activityView)
+        addSubview(imageView)
+        addSubview(headerLabel)
         
         activityView.frame = CGRect(x: 1, y: 1,
                                     width: heightOfCell / 2 - 2,

@@ -134,33 +134,26 @@ final class MainViewController: UIViewController {
     private func setEditButton() {
         
         let editBarButton = UIButton(frame: CGRect(x: 0, y: 0, width: 44, height: 30))
-        editBarButton.setTitle("edit", for: .normal)
-        editBarButton.layer.cornerRadius = 12
-        editBarButton.backgroundColor = .secondaryLabel
+        editBarButton.setTitle("Edit", for: .normal)
+        editBarButton.setTitleColor(.systemBlue, for: .normal)
         editBarButton.addTarget(self, action: #selector(editButtonTap), for: .touchUpInside)
         
         let leftButton = UIBarButtonItem(customView: editBarButton)
-        leftButton.tintColor = .blue
         self.navigationItem.setLeftBarButton(leftButton, animated: true)
         self.navigationItem.setRightBarButton(nil, animated: true)
     }
     
     @objc private func editButtonTap() {
         
-        print("setEdit")
         deleteIsHidden = false
         tableView.reloadData()
+        
         let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonTap))
         doneButton.tintColor = .systemBlue
-        doneButton.customView?.backgroundColor = .systemGray
-        doneButton.customView?.clipsToBounds = true
-        doneButton.customView?.layer.cornerRadius = 8
         self.navigationItem.setLeftBarButton(doneButton, animated: true)
+        
         let deleteButton = UIBarButtonItem(title: "Delete All", style: .plain, target: self, action: #selector(deleteButtonTap))
         deleteButton.tintColor = .systemRed
-        deleteButton.customView?.backgroundColor = .systemGray
-        deleteButton.customView?.clipsToBounds = true
-        deleteButton.customView?.layer.cornerRadius = 8
         self.navigationItem.setRightBarButton(deleteButton, animated: true)
     }
     

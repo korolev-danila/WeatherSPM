@@ -85,7 +85,7 @@ extension MainInteractor: MainInteractorInputProtocol {
     }
     
     
-    func save(_ citySearch: CitySearch) {
+    public func save(_ citySearch: CitySearch) {
         if let city = coreDataManager.save(citySearch) {
             fetchCountrys()
             presenter?.updateTableView()

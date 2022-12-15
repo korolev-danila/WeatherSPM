@@ -255,10 +255,11 @@ extension CoreDataManager: CoreDataManagerProtocol {
         if let country = countrys.filter({ $0.name == citySearch.country }).first {
             if country.citysArray.filter({ $0.name == citySearch.name }).first == nil {
                 
-                if let city = createCity(citySearch, country) {
-                    saveContext()
-                    return city
-                }
+                guard let city = createCity(citySearch, country) else { return nil }
+                
+                saveContext()
+                return city
+                
             } else {
                 print("try save old city")
             }
@@ -273,10 +274,11 @@ extension CoreDataManager: CoreDataManagerProtocol {
                 country.isoA2 = citySearch.isoA2!
             }
             
-            if let city = createCity(citySearch, country) {
-                saveContext()
-                return city
-            }
+            guard let city = createCity(citySearch, country) else { return nil }
+            
+            saveContext()
+            return city
+            
         }
         return nil
     }
