@@ -173,7 +173,6 @@ extension CoreDataManager: CoreDataManagerProtocol {
         
         do {
             countrys = try persistentContainer.viewContext.fetch(fetchRequest)
-          //  presenter?.updateCountrysArray(countrys)
             
         } catch let error as NSError {
             print(error.localizedDescription)
@@ -253,12 +252,15 @@ extension CoreDataManager: CoreDataManagerProtocol {
         let countrys = fetchCountrys()
         
         /// Create only city
-        if let country = countrys.filter({ $0.name == citySearch.country }).first ,
-           country.citysArray.filter({ $0.name == citySearch.name }).first == nil {
-            
-            if let city = createCity(citySearch, country) {
-                saveContext()
-                return city
+        if let country = countrys.filter({ $0.name == citySearch.country }).first {
+            if country.citysArray.filter({ $0.name == citySearch.name }).first == nil {
+                
+                if let city = createCity(citySearch, country) {
+                    saveContext()
+                    return city
+                }
+            } else {
+                print("try save old city")
             }
         } else {
             /// Create country and city
