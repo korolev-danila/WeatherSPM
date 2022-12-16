@@ -31,7 +31,7 @@ final class SearchViewController: UIViewController {
     private var search: String = ""
     
     private let cancelButton: UIButton = {
-        let button = UIButton(frame: CGRect(x: 0, y: 0, width: 66, height: 30))
+        let button = UIButton()
         button.setTitle("Cancel", for: .normal)
         button.setTitleColor(.label, for: .normal)
         button.addTarget(self, action: #selector(cancelPress), for: .touchUpInside)

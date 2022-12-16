@@ -10,7 +10,7 @@ import SnapKit
 
 final class ShimmerView: UIView {
     
-    let backColor = UIColor.systemBackground
+    private let backColor = UIColor.systemBackground
     
     private let topView: UIView = {
         let view = UIView()

@@ -49,7 +49,7 @@ final class NewsCell: UITableViewCell {
     }
 
     private func setupViews() {
-        self.selectionStyle = .none
+        selectionStyle = .none
         
         contentView.addSubview(dateLabel)
         contentView.addSubview(titleLabel)

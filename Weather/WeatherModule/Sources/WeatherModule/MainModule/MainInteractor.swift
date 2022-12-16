@@ -29,7 +29,6 @@ final class MainInteractor {
     private let coreDataManager: CoreDataManagerProtocol
     private let networkManager: NetworkManagerProtocol
     
-    private var countrys: [Country] = []
     
     init(coreData: CoreDataManagerProtocol, network: NetworkManagerProtocol){
         self.coreDataManager = coreData
@@ -69,8 +68,7 @@ extension MainInteractor: MainInteractorInputProtocol {
 
     public func fetchCountrys() {
         
-        countrys = coreDataManager.fetchCountrys()
-        presenter?.updateCountrysArray(countrys)
+        presenter?.updateCountrysArray(coreDataManager.fetchCountrys())
     }
     
     public func resetAllRecords() {

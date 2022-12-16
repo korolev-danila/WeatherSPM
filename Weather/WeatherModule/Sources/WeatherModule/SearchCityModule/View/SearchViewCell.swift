@@ -54,8 +54,8 @@ final class SearchCell: UITableViewCell {
     }
     
     private func setupViews() {
-        self.backgroundColor = .clear
-        self.selectionStyle = .none
+        backgroundColor = .clear
+        selectionStyle = .none
         
         contentView.addSubview(nameLabel)
         contentView.addSubview(countryLabel)

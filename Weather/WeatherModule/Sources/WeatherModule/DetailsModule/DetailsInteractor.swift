@@ -32,6 +32,9 @@ final class DetailsInteractor {
         print("deinit DetailsInteractor")
     }
     
+    
+    
+    // MARK: - Private method
     private func  fetchIcons(weather: Weather) {
         
         var weatherLocal = weather

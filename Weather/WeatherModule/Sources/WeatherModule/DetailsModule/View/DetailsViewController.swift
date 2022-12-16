@@ -341,7 +341,8 @@ extension DetailsViewController: UIScrollViewDelegate {
             return
         }
 
-        if scrollView.bounds.intersects(collectionView.frame) == true  {
+        if scrollView.bounds.intersects(collectionView.frame) == true ||
+            scrollView.bounds.intersects(cityView.frame) == true {
             scrollUpButton.isHidden = true
         } else if scrollView.contentOffset.y > 0 {
             if scrollUpButton.isHidden {
@@ -404,11 +405,6 @@ extension DetailsViewController: UITableViewDelegate, UITableViewDataSource {
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return  80
     }
-    
-//    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        print("Num: \(indexPath.row)")
-//        presenter.printItem(indexPath)
-//    }
     
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return  presenter.newsCount()

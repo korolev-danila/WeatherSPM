@@ -108,8 +108,6 @@ final class CitySubView: UIView {
     private let tempView: UIView = {
         let view = UIView()
         view.backgroundColor = .clear
-        view.layer.cornerRadius = 10
-        view.layer.masksToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
         
         return view
@@ -121,7 +119,7 @@ final class CitySubView: UIView {
         label.font = UIFont.systemFont(ofSize: 13)
         label.adjustsFontSizeToFitWidth = true
         label.numberOfLines = 1
-        label.minimumScaleFactor = 0.2
+        label.minimumScaleFactor = 0.02
         label.baselineAdjustment = .alignBaselines
         label.textAlignment  = .left
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -135,7 +133,7 @@ final class CitySubView: UIView {
         label.font = UIFont.systemFont(ofSize: 13)
         label.adjustsFontSizeToFitWidth = true
         label.numberOfLines = 1
-        label.minimumScaleFactor = 0.2
+        label.minimumScaleFactor = 0.02
         label.baselineAdjustment = .alignBaselines
         label.textAlignment  = .left
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -191,7 +189,11 @@ final class CitySubView: UIView {
     private let dayCLabel: UILabel = {
         let label = UILabel()
         label.text = "\u{2103}"
-        label.font = UIFont.systemFont(ofSize: 10)
+        label.font = UIFont.systemFont(ofSize: 8)
+        label.adjustsFontSizeToFitWidth = true
+        label.numberOfLines = 1
+        label.minimumScaleFactor = 0.02
+        label.baselineAdjustment = .alignBaselines
         label.textAlignment  = .right
         label.translatesAutoresizingMaskIntoConstraints = false
         
@@ -216,7 +218,11 @@ final class CitySubView: UIView {
     private let nightCLabel: UILabel = {
         let label = UILabel()
         label.text = "\u{2103}"
-        label.font = UIFont.systemFont(ofSize: 10)
+        label.font = UIFont.systemFont(ofSize: 8)
+        label.adjustsFontSizeToFitWidth = true
+        label.numberOfLines = 1
+        label.minimumScaleFactor = 0.02
+        label.baselineAdjustment = .alignBaselines
         label.textAlignment  = .right
         label.translatesAutoresizingMaskIntoConstraints = false
         
@@ -260,8 +266,6 @@ final class CitySubView: UIView {
     private let windView: UIView = {
         let view = UIView()
         view.backgroundColor = .clear
-        view.layer.cornerRadius = 10
-        view.layer.masksToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
         
         return view
@@ -298,6 +302,10 @@ final class CitySubView: UIView {
         label.backgroundColor = .clear
         label.textColor = .gray
         label.font = UIFont.systemFont(ofSize: 15)
+        label.adjustsFontSizeToFitWidth = true
+        label.numberOfLines = 1
+        label.minimumScaleFactor = 0.02
+        label.baselineAdjustment = .alignBaselines
         label.textAlignment  = .right
         label.text = "Direction:"
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -465,7 +473,7 @@ final class CitySubView: UIView {
         tempView.snp.makeConstraints { make in
             make.top.equalTo(twoView.snp.bottom).offset(8)
             make.leading.equalToSuperview()
-            make.trailing.equalTo(self.snp.centerX).offset(-16)
+            make.trailing.equalTo(self.snp.centerX).offset(-10)
             make.bottom.equalToSuperview()
         }
         perceivedLabel.snp.makeConstraints { make in
@@ -478,7 +486,7 @@ final class CitySubView: UIView {
             make.bottom.equalTo(nightTextLabel.snp.bottom)
             make.height.equalTo(17)
             make.leading.equalToSuperview().offset(12)
-            make.trailing.equalTo(dayTextLabel.snp.leading).offset(-2)
+            make.trailing.equalTo(nightTextLabel.snp.leading).offset(-2)
         }
         
         dayTextLabel.snp.makeConstraints { make in
@@ -496,6 +504,7 @@ final class CitySubView: UIView {
         dayCLabel.snp.makeConstraints { make in
             make.top.equalTo(dayTextLabel.snp.top)
             make.height.equalTo(12)
+            make.width.equalTo(12)
             make.leading.equalTo(dayTempLabel.snp.trailing)
         }
         
@@ -514,13 +523,14 @@ final class CitySubView: UIView {
         nightCLabel.snp.makeConstraints { make in
             make.top.equalTo(nightTextLabel.snp.top)
             make.height.equalTo(12)
+            make.width.equalTo(12)
             make.leading.equalTo(nightTempLabel.snp.trailing)
         }
      
         conditionTextLabel.snp.makeConstraints { make in
             make.top.equalTo(nightTextLabel.snp.bottom).offset(16)
             make.leading.equalToSuperview().offset(12)
-            make.trailing.equalTo(tempView.snp.centerX).offset(-4)
+            make.trailing.equalTo(tempView.snp.centerX).inset(4)
             make.height.equalTo(20)
         }
         conditionLabel.snp.makeConstraints { make in
@@ -535,14 +545,14 @@ final class CitySubView: UIView {
         // MARK: - windView.snp.makeConstraints
         windView.snp.makeConstraints { make in
             make.top.equalTo(twoView.snp.bottom).offset(8)
-            make.leading.equalTo(self.snp.centerX).offset(-16)
+            make.leading.equalTo(self.snp.centerX).offset(-10)
             make.trailing.equalToSuperview()
             make.bottom.equalToSuperview()
         }
         pressureMmTextLabel.snp.makeConstraints { make in
             make.top.equalToSuperview()
-            make.leading.equalToSuperview().offset(4)
-            make.trailing.equalTo(windView.snp.centerX).offset(-18)
+            make.leading.equalToSuperview().offset(2)
+            make.trailing.equalTo(windView.snp.centerX).offset(-14)
             make.height.equalTo(20)
         }
         pressureMmLabel.snp.makeConstraints { make in
@@ -553,8 +563,8 @@ final class CitySubView: UIView {
         }
         humidityTextLabel.snp.makeConstraints { make in
             make.top.equalTo(pressureMmTextLabel.snp.bottom).offset(4)
-            make.leading.equalToSuperview().offset(4)
-            make.trailing.equalTo(windView.snp.centerX).offset(-18)
+            make.leading.equalToSuperview().offset(2)
+            make.trailing.equalTo(windView.snp.centerX).offset(-14)
             make.height.equalTo(20)
         }
         humidityLabel.snp.makeConstraints { make in
@@ -565,8 +575,8 @@ final class CitySubView: UIView {
         }
         windSpeedTextLabel.snp.makeConstraints { make in
             make.top.equalTo(humidityTextLabel.snp.bottom).offset(4)
-            make.leading.equalToSuperview().offset(4)
-            make.trailing.equalTo(windView.snp.centerX).offset(-18)
+            make.leading.equalToSuperview().offset(2)
+            make.trailing.equalTo(windView.snp.centerX).offset(-14)
             make.height.equalTo(20)
         }
         windSpeedLabel.snp.makeConstraints { make in
@@ -577,8 +587,8 @@ final class CitySubView: UIView {
         }
         windDirTextLabel.snp.makeConstraints { make in
             make.top.equalTo(windSpeedTextLabel.snp.bottom).offset(4)
-            make.leading.equalToSuperview().offset(4)
-            make.trailing.equalTo(windView.snp.centerX).offset(-18)
+            make.leading.equalToSuperview().offset(2)
+            make.trailing.equalTo(windView.snp.centerX).offset(-14)
             make.height.equalTo(20)
         }
         windDirLabel.snp.makeConstraints { make in
