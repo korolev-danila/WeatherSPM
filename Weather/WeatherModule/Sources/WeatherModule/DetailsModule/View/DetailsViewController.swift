@@ -178,8 +178,8 @@ final class DetailsViewController: UIViewController {
         shimmerView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
             make.bottom.equalToSuperview()
-            make.leading.equalTo(self.view.safeAreaLayoutGuide.snp.leading)
-            make.trailing.equalTo(self.view.safeAreaLayoutGuide.snp.trailing)
+            make.leading.equalTo(view.safeAreaLayoutGuide.snp.leading)
+            make.trailing.equalTo(view.safeAreaLayoutGuide.snp.trailing)
         }
     }
     
@@ -236,7 +236,7 @@ final class DetailsViewController: UIViewController {
         scrollUpButton.addTarget(self, action: #selector(scrollButtonTapped), for: .touchUpInside)
 
         scrollUpButton.snp.makeConstraints { make in
-            make.top.equalTo(view.snp.top).offset(80)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(50)
             make.centerX.equalTo(scrollView.snp.centerX)
             make.width.equalTo(88)
             make.height.equalTo(44)
@@ -251,27 +251,27 @@ final class DetailsViewController: UIViewController {
         stackView.addArrangedSubview(newsTableView)
 
         imageView.snp.makeConstraints { make in
-            make.leading.equalTo(self.view.safeAreaLayoutGuide.snp.leading)
-            make.trailing.equalTo(self.view.safeAreaLayoutGuide.snp.trailing)
+            make.leading.equalTo(view.safeAreaLayoutGuide.snp.leading)
+            make.trailing.equalTo(view.safeAreaLayoutGuide.snp.trailing)
             make.height.equalTo(imageViewHConst)
         }
 
         cityView.snp.makeConstraints { make in
-            make.leading.equalTo(self.view.safeAreaLayoutGuide.snp.leading)
-            make.trailing.equalTo(self.view.safeAreaLayoutGuide.snp.trailing)
+            make.leading.equalTo(view.safeAreaLayoutGuide.snp.leading)
+            make.trailing.equalTo(view.safeAreaLayoutGuide.snp.trailing)
             make.height.equalTo(cityViewHConst)
         }
 
 
         collectionView.snp.makeConstraints { make in
-            make.leading.equalTo(self.view.safeAreaLayoutGuide.snp.leading)
-            make.trailing.equalTo(self.view.safeAreaLayoutGuide.snp.trailing)
+            make.leading.equalTo(view.safeAreaLayoutGuide.snp.leading)
+            make.trailing.equalTo(view.safeAreaLayoutGuide.snp.trailing)
             make.height.equalTo(collectionViewHConst)
         }
 
         newsTableView.snp.makeConstraints { make in
-            make.leading.equalTo(self.view.safeAreaLayoutGuide.snp.leading)
-            make.trailing.equalTo(self.view.safeAreaLayoutGuide.snp.trailing)
+            make.leading.equalTo(view.safeAreaLayoutGuide.snp.leading)
+            make.trailing.equalTo(view.safeAreaLayoutGuide.snp.trailing)
         }
     }
     
