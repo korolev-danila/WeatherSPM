@@ -23,35 +23,28 @@ protocol MainPresenterDelegate: AnyObject  {
 }
 
 final class MainPresenter {
-    
     weak var view: MainViewInputProtocol?
     private let router: MainRouterProtocol
     private let interactor: MainInteractorInputProtocol
     
     private var countrys: [Country] = []
-    
     private var timer: Timer?
     
-    init(interactor: MainInteractorInputProtocol, router: MainRouterProtocol){
+    init(interactor: MainInteractorInputProtocol, router: MainRouterProtocol) {
         self.interactor = interactor
         self.router = router
     }
-  
     
     // MARK: - Update properties
     private func startTimer() {
-        if  timer == nil {
-            let timer = Timer(timeInterval: 60.0,
-                              target: self,
+        if timer == nil {
+            let timer = Timer(timeInterval: 60.0, target: self,
                               selector: #selector(reloadTable),
-                              userInfo: nil,
-                              repeats: true)
+                              userInfo: nil, repeats: true)
             RunLoop.current.add(timer, forMode: .common)
             timer.tolerance = 0.1
-            
             self.timer = timer
         }
-        print("updateTime")
     }
     
     @objc private func reloadTable() {
@@ -69,61 +62,53 @@ final class MainPresenter {
     }
 }
 
-
-
 // MARK: - MainViewOutputProtocol
 extension MainPresenter: MainViewOutputProtocol {
-    
-    public func viewDidLoad() {
+    func viewDidLoad() {
         interactor.fetchCountrys()
         startTimer()
         updateAllTemp()
     }
     
-
-    
     // MARK: - Actions
-    public func didTapButton() {
+    func didTapButton() {
         router.pushSearchView(delegate: self)
     }
     
-    public func showDetails(index: IndexPath) {
+    func showDetails(index: IndexPath) {
         if let city = countrys[safe: index.section]?.citysArray[safe: index.row] {
             router.pushDetailsView(city: city)
         }
     }
     
-    public func deleteCity(for index: IndexPath) -> Int {
+    func deleteCity(for index: IndexPath) -> Int {
         let count = countrys[safe: index.section]?.citysArray.count
+        
         if let city = countrys[safe: index.section]?.citysArray[safe: index.row] {
             interactor.deleteCity(city)
         }
-        
         return count ?? 0
     }
     
-    public func deleteAll() {
+    func deleteAll() {
         countrys = []
         interactor.resetAllRecords()
     }
-
-
     
     // MARK: - UI Update
-    public func countrysCount() -> Int {
+    func countrysCount() -> Int {
         return countrys.count
     }
     
-    public func sectionArrayCount(_ section: Int) -> Int {
-        
+    func sectionArrayCount(_ section: Int) -> Int {
         return countrys[safe: section]?.citysArray.count ?? 0
     }
     
-    public func createHeaderViewModel(_ section: Int) -> HeaderCellViewModel {
-        
+    func createHeaderViewModel(_ section: Int) -> HeaderCellViewModel {
         var data = Data()
         
         if let flagData = countrys[safe: section]?.flagData {
+            /// checking for the correct picture
             if flagData == data {
                 updateFlag(forSection: section)
             } else {
@@ -132,17 +117,15 @@ extension MainPresenter: MainViewOutputProtocol {
         } else {
             updateFlag(forSection: section)
         }
-        
         return HeaderCellViewModel(name: countrys[safe: section]?.name ?? "",
                                    imgData: data)
     }
     
-    public func createCellViewModel(for index: IndexPath) -> MainCellViewModel {
-
+    func createCellViewModel(for index: IndexPath) -> MainCellViewModel {
         let name = countrys[safe: index.section]?.citysArray[safe: index.row]?.name ?? ""
-        
         var temp: String? = nil
-        var timeString: String = ""
+        var timeString = ""
+        
         if let bool = countrys[safe: index.section]?.citysArray[safe: index.row]?.timeAndTemp.isNil {
             /// checking whether the temperature of the new city has been updated
             if !bool {
@@ -154,11 +137,10 @@ extension MainPresenter: MainViewOutputProtocol {
                 temp = "\(Int(countrys[safe: index.section]?.citysArray[safe: index.row]?.timeAndTemp.temp ?? 0))"
             }
         }
-        
-        return  MainCellViewModel(name: name, temp: temp, time: timeString)
+        return MainCellViewModel(name: name, temp: temp, time: timeString)
     }
     
-    public func updateFlag(forSection section: Int) {
+    func updateFlag(forSection section: Int) {
         if let country = countrys[safe: section] {
             DispatchQueue.main.async {
                 self.interactor.requestFlagImg(country: country)
@@ -167,25 +149,20 @@ extension MainPresenter: MainViewOutputProtocol {
     }
 }
 
-
-
 // MARK: - MainInteractorOutputProtocol
 extension MainPresenter: MainInteractorOutputProtocol {
-    public func updateTableView() {
+    func updateTableView() {
         view?.reloadTableView()
     }
     
-    public func updateCountrysArray(_ array: [Country]) {
-        self.countrys = array
+    func updateCountrysArray(_ array: [Country]) {
+        countrys = array
     }
 }
 
-
-
 // MARK: - MainPresenterDelegate
 extension MainPresenter: MainPresenterDelegate {
-    
-    public func save(_ citySearch: CitySearch) {
+    func save(_ citySearch: CitySearch) {
         interactor.save(citySearch)
     }
 }

@@ -8,7 +8,6 @@
 import UIKit
 
 final class HeaderView: UIView {
-    
     private let headerLabel: UILabel = {
         let label = UILabel()
         label.backgroundColor = .clear
@@ -18,27 +17,21 @@ final class HeaderView: UIView {
         label.baselineAdjustment = .alignBaselines
         label.font = UIFont.preferredFont(forTextStyle: .title3)
         label.textColor = .label
-        
         return label
     }()
-    
     private let activityView: UIActivityIndicatorView = {
         let activity = UIActivityIndicatorView(style: .medium)
         activity.contentMode = .center
-        
         return activity
     }()
-    
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.backgroundColor = .clear
         imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFill
         imageView.layer.cornerRadius = 13
-
         return imageView
     }()
-    
     private let gradientLayer: CAGradientLayer = {
         let gradient = CAGradientLayer()
         let color1 = UIColor.gray.withAlphaComponent(0.7).cgColor
@@ -49,9 +42,8 @@ final class HeaderView: UIView {
     }()
     
     // MARK: - init
-    override init( frame: CGRect) {
+    override init(frame: CGRect) {
         super.init(frame: frame)
-        
         setupViews(frame.size.height)
     }
     
@@ -59,16 +51,14 @@ final class HeaderView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Private method
     private func setupViews(_ heightOfCell: CGFloat) {
-    
         backgroundColor = UIColor.clear
         layer.cornerRadius = 15.0
         clipsToBounds = true
-        
-        gradientLayer.frame = self.bounds
+        gradientLayer.frame = bounds
         layer.insertSublayer(gradientLayer, at: 1)
        
-        
         addSubview(activityView)
         addSubview(imageView)
         addSubview(headerLabel)
@@ -76,29 +66,23 @@ final class HeaderView: UIView {
         activityView.frame = CGRect(x: 1, y: 1,
                                     width: heightOfCell / 2 - 2,
                                     height: heightOfCell / 2 - 2)
-
         imageView.frame = CGRect(x: 1, y: 1,
                                  width: heightOfCell / 2 - 2,
                                  height: heightOfCell / 2 - 2)
-
         headerLabel.frame = CGRect(x: heightOfCell / 2, y: 0,
-                                   width: self.frame.width - heightOfCell*1.25,
-                                   height: heightOfCell  / 2)
+                                   width: frame.width - heightOfCell*1.25,
+                                   height: heightOfCell / 2)
     }
     
-    
     // MARK: - Public method
-    public func settingCell(_ viewModel: HeaderCellViewModel) {
-        
+    func settingCell(_ viewModel: HeaderCellViewModel) {
         headerLabel.text = viewModel.name
         
-        if let image = UIImage(data: viewModel.imgData)  {
+        if let image = UIImage(data: viewModel.imgData) {
             activityView.stopAnimating()
             imageView.image = image.resize(60)
-        } else {
-            if !activityView.isAnimating {
-                activityView.startAnimating()
-            }
+        } else if !activityView.isAnimating {
+            activityView.startAnimating()
         }
     }
 }

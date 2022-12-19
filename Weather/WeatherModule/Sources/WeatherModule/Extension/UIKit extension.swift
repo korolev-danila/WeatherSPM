@@ -20,22 +20,23 @@ extension UIView {
 
 extension UIImage {
     /// change the image size by pixels
-    func resize(_ max_size: CGFloat) -> UIImage {
-        let max_size_pixels = max_size / UIScreen.main.scale
-        let aspectRatio =  size.width/size.height
+    func resize(_ maxSize: CGFloat) -> UIImage {
+        let maxSizePixels = maxSize / UIScreen.main.scale
+        let aspectRatio = size.width/size.height
         var width: CGFloat
         var height: CGFloat
         var newImage: UIImage
+        
         if aspectRatio > 1 {
-            width = max_size_pixels
-            height = max_size_pixels / aspectRatio
+            width = maxSizePixels
+            height = maxSizePixels / aspectRatio
         } else {
-            height = max_size_pixels
-            width = max_size_pixels * aspectRatio
+            height = maxSizePixels
+            width = maxSizePixels * aspectRatio
         }
         let renderer = UIGraphicsImageRenderer(size: CGSize(width: width, height: height), format: UIGraphicsImageRendererFormat.default())
-        newImage = renderer.image {
-            (context) in
+        
+        newImage = renderer.image { context in
             self.draw(in: CGRect(x: 0, y: 0, width: width, height: height))
         }
         return newImage

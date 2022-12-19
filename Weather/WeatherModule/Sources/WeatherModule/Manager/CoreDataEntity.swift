@@ -25,7 +25,6 @@ public final class Country: NSManagedObject {
 }
 
 extension Country: Identifiable {
-    
     @nonobjc public class func fetchRequest() -> NSFetchRequest<Country> {
         return NSFetchRequest<Country>(entityName: "Country")
     }
@@ -73,7 +72,3 @@ extension TimeAndTemp: Identifiable {
         return NSFetchRequest<TimeAndTemp>(entityName: "TimeAndTemp")
     }
 }
-
-
-
-

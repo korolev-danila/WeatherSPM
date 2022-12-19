@@ -10,7 +10,7 @@ import SnapKit
 import WebKit
 
 final class WeatherCell: UICollectionViewCell {
-    
+    private let vcWebDelegate = VCWebDelegate()
     private let webView: WKWebView = {
         let preferences = WKPreferences()
         preferences.javaScriptEnabled = false
@@ -24,26 +24,17 @@ final class WeatherCell: UICollectionViewCell {
         wv.isHidden = true
         wv.isUserInteractionEnabled = false
         wv.backgroundColor = .clear
-        
         wv.allowsBackForwardNavigationGestures = true
         wv.allowsLinkPreview = true
-        
         return wv
     }()
-    
     private let iconActivityView: UIActivityIndicatorView = {
         let activity = UIActivityIndicatorView(style: .medium)
         activity.contentMode = .center
         activity.backgroundColor = .clear
         activity.isHidden = true
-        
         return activity
     }()
-    
-    private let vcWebDelegate = VCWebDelegate()
-    
-    
-    
     private let dayOfTheWeekLabel: UILabel = {
         let label = UILabel()
         label.text = "Mon"
@@ -52,12 +43,10 @@ final class WeatherCell: UICollectionViewCell {
         label.numberOfLines = 1
         label.minimumScaleFactor = 0.5
         label.baselineAdjustment = .alignBaselines
-        label.textAlignment  = .center
+        label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
-        
         return label
     }()
-    
     private let dateLabel: UILabel = {
         let label = UILabel()
         label.text = "27.11"
@@ -66,17 +55,14 @@ final class WeatherCell: UICollectionViewCell {
         label.numberOfLines = 1
         label.minimumScaleFactor = 0.5
         label.baselineAdjustment = .alignBaselines
-        label.textAlignment  = .left
+        label.textAlignment = .left
         label.translatesAutoresizingMaskIntoConstraints = false
-        
         return label
     }()
-    
     private let tempView: UIView = {
         let view = UIView()
         return view
     }()
-    
     private let dayTextLabel: UILabel = {
         let label = UILabel()
         label.text = "Day:"
@@ -85,12 +71,10 @@ final class WeatherCell: UICollectionViewCell {
         label.numberOfLines = 1
         label.minimumScaleFactor = 0.02
         label.baselineAdjustment = .alignBaselines
-        label.textAlignment  = .right
+        label.textAlignment = .right
         label.translatesAutoresizingMaskIntoConstraints = false
-        
         return label
     }()
-    
     private let nightTextLabel: UILabel = {
         let label = UILabel()
         label.text = "Night:"
@@ -99,12 +83,10 @@ final class WeatherCell: UICollectionViewCell {
         label.numberOfLines = 1
         label.minimumScaleFactor = 0.02
         label.baselineAdjustment = .alignBaselines
-        label.textAlignment  = .right
+        label.textAlignment = .right
         label.translatesAutoresizingMaskIntoConstraints = false
-        
         return label
     }()
-    
     private let dayTempLabel: UILabel = {
         let label = UILabel()
         label.text = "36"
@@ -114,22 +96,18 @@ final class WeatherCell: UICollectionViewCell {
         label.numberOfLines = 1
         label.minimumScaleFactor = 0.02
         label.baselineAdjustment = .alignBaselines
-        label.textAlignment  = .right
+        label.textAlignment = .right
         label.translatesAutoresizingMaskIntoConstraints = false
-        
         return label
     }()
-    
     private let dayCLabel: UILabel = {
         let label = UILabel()
         label.text = "\u{2103}"
         label.font = UIFont.systemFont(ofSize: 8)
-        label.textAlignment  = .right
+        label.textAlignment = .right
         label.translatesAutoresizingMaskIntoConstraints = false
-        
         return label
     }()
-    
     private let nightTempLabel: UILabel = {
         let label = UILabel()
         label.text = "-12"
@@ -139,19 +117,16 @@ final class WeatherCell: UICollectionViewCell {
         label.numberOfLines = 1
         label.minimumScaleFactor = 0.02
         label.baselineAdjustment = .alignBaselines
-        label.textAlignment  = .right
+        label.textAlignment = .right
         label.translatesAutoresizingMaskIntoConstraints = false
-        
         return label
     }()
-    
     private let nightCLabel: UILabel = {
         let label = UILabel()
         label.text = "\u{2103}"
         label.font = UIFont.systemFont(ofSize: 8)
-        label.textAlignment  = .right
+        label.textAlignment = .right
         label.translatesAutoresizingMaskIntoConstraints = false
-        
         return label
     }()
     
@@ -165,8 +140,7 @@ final class WeatherCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setupViews() {
-        
+    private func setupViews() {
         backgroundColor = .systemBackground
         
         contentView.addSubview(dateLabel)
@@ -177,7 +151,6 @@ final class WeatherCell: UICollectionViewCell {
         
         vcWebDelegate.webView = webView
         vcWebDelegate.iconActivityView = iconActivityView
-
         
         tempView.addSubview(dayTextLabel)
         tempView.addSubview(dayTempLabel)
@@ -189,16 +162,14 @@ final class WeatherCell: UICollectionViewCell {
         dayOfTheWeekLabel.snp.makeConstraints { make in
             make.top.equalTo(6)
             make.leading.equalTo(5)
-            make.trailing.equalTo(self.snp.centerX).offset(-4)
+            make.trailing.equalTo(contentView.snp.centerX).offset(-4)
             make.height.equalTo(15)
         }
-        
         dateLabel.snp.makeConstraints { make in
             make.top.equalTo(6)
             make.trailing.equalTo(-5)
             make.leading.equalTo(dayOfTheWeekLabel.snp.trailing).offset(4)
             make.height.equalTo(15)
-            
         }
         
         // MARK: - tempView.snp.makeConstraints
@@ -208,12 +179,11 @@ final class WeatherCell: UICollectionViewCell {
             make.top.equalTo(dayOfTheWeekLabel.snp.bottom).offset(2)
             make.height.equalTo(30)
         }
-        
         dayTextLabel.snp.makeConstraints { make in
             make.top.equalToSuperview()
             make.height.equalTo(14)
             make.leading.equalToSuperview().offset(4)
-            make.trailing.equalTo(self.snp.centerX).offset(-2)
+            make.trailing.equalTo(contentView.snp.centerX).offset(-2)
         }
         dayTempLabel.snp.makeConstraints { make in
             make.bottom.equalTo(dayTextLabel.snp.bottom)
@@ -226,12 +196,11 @@ final class WeatherCell: UICollectionViewCell {
             make.height.equalTo(12)
             make.leading.equalTo(dayTempLabel.snp.trailing)
         }
-        
         nightTextLabel.snp.makeConstraints { make in
             make.top.equalTo(dayTextLabel.snp.bottom)
             make.height.equalTo(14)
             make.leading.equalToSuperview().offset(2)
-            make.trailing.equalTo(self.snp.centerX).offset(-2)
+            make.trailing.equalTo(contentView.snp.centerX).offset(-2)
         }
         nightTempLabel.snp.makeConstraints { make in
             make.bottom.equalTo(nightTextLabel.snp.bottom)
@@ -244,14 +213,12 @@ final class WeatherCell: UICollectionViewCell {
             make.height.equalTo(12)
             make.leading.equalTo(nightTempLabel.snp.trailing)
         }
-        
         webView.snp.makeConstraints { make in
             make.top.equalTo(tempView.snp.bottom)
             make.leading.equalToSuperview().offset(14)
             make.trailing.equalToSuperview().offset(-4)
             make.bottom.equalToSuperview().offset(-4)
         }
-        
         iconActivityView.snp.makeConstraints { make in
             make.top.equalTo(tempView.snp.bottom).offset(4)
             make.leading.equalToSuperview().offset(4)
@@ -262,7 +229,6 @@ final class WeatherCell: UICollectionViewCell {
     
     // MARK: - configureCell
     func configureCell(_ viewModel: ForecastViewModel) {
-        
         dayTempLabel.text = viewModel.dayTemp
         nightTempLabel.text = viewModel.nightTemp
         dateLabel.text = viewModel.date
@@ -278,11 +244,8 @@ final class WeatherCell: UICollectionViewCell {
     }
 }
 
-
-
 // MARK: - VCWebDelegate
 final class VCWebDelegate: UIViewController {
-    
     weak var iconActivityView: UIActivityIndicatorView?
     weak var webView: WKWebView?
    
@@ -290,14 +253,16 @@ final class VCWebDelegate: UIViewController {
         super.init(nibName: nil, bundle: nil)
         view.backgroundColor = .clear
     }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
     deinit {
         print("deinit VCWebDelegate")
     }
     
-    public func setDelegate() {
+    func setDelegate() {
         if webView != nil {
             webView?.navigationDelegate = self
         } else {
@@ -306,17 +271,10 @@ final class VCWebDelegate: UIViewController {
     }
 }
 
-
-
 // MARK: - WKNavigationDelegate
 extension VCWebDelegate: WKNavigationDelegate {
-    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-       
-    }
-    
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation) {
         self.webView?.isHidden = false
         self.iconActivityView?.stopAnimating()
     }
 }
-

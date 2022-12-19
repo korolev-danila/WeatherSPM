@@ -39,75 +39,79 @@ struct NewsViewModel {
     let date: String
 }
 
-
 final class DetailsPresenter {
-    
     private let interactor: DetailsInteractorInputProtocol
     private let router: DetailsRouterProtocol
     weak var view: DetailsViewInputProtocol?
     
     private var selectCellIndex: IndexPath = [0,0]
-    
     private let city: City
     private var weather: Weather? {
         didSet {
             view?.reloadCollection()
         }
     }
-    
     private var news: News? {
         didSet {
             view?.reloadTableView()
         }
     }
     
-    init(interactor: DetailsInteractorInputProtocol, router: DetailsRouterProtocol, city: City){
+    init(interactor: DetailsInteractorInputProtocol, router: DetailsRouterProtocol, city: City) {
         self.interactor = interactor
         self.router = router
         self.city = city
-        
     }
     
     deinit {
         print("deinit DetailsPresenter")
     }
+    
+    // MARK: - Private method
+    private func dateToString(_ date: Date, format: String) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+        dateFormatter.dateFormat = format
+        return dateFormatter.string(from: date)
+    }
+    
+    private func stringToDate(_ date: String, format: String) -> Date? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+        dateFormatter.dateFormat = format
+        return dateFormatter.date(from: date)
+    }
 }
-    
 
-
-    // MARK: - DetailsViewOutputProtocol
+// MARK: - DetailsViewOutputProtocol
 extension DetailsPresenter: DetailsViewOutputProtocol {
-    
-    public func viewDidLoad() {        
-        
+    func viewDidLoad() {
         DispatchQueue.main.async {
             self.interactor.requestWeaher(forCity: self.city)
         }
-
+        
         view?.configureCityView()
-
+        
         DispatchQueue.main.async {
             self.interactor.getNewsForCity(self.city.name)
         }
     }
     
-    
-    public func createCityViewModel() -> CityViewModel {
+    func createCityViewModel() -> CityViewModel {
         var population = ""
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
+        
         if let string = formatter.string(for: Int(city.population)){
             population = string
         }
-        
         return CityViewModel(cityName: city.name,
                              countryFlag: city.country.flagData,
                              isCapital: city.isCapital,
                              populationOfCity: population)
     }
     
-    public func createFactViewModel() -> FactViewModel {
-        
+    func createFactViewModel() -> FactViewModel {
         var dayTemp = ""
         var nightTemp = ""
         var windSpeed = ""
@@ -119,20 +123,24 @@ extension DetailsPresenter: DetailsViewOutputProtocol {
         if let dTemp = weather?.forecasts?[safe: selectCellIndex.row]?.parts?.dayShort?.feelsLike {
             dayTemp = "\(Int(dTemp))"
         }
+        
         if let nTemp = weather?.forecasts?[safe: selectCellIndex.row]?.parts?.nightShort?.feelsLike {
             nightTemp = "\(Int(nTemp))"
         }
+        
         if let speed = weather?.forecasts?[safe: selectCellIndex.row]?.parts?.dayShort?.windSpeed {
             windSpeed = "\(speed) m/c"
         }
+        
         if let double = weather?.forecasts?[safe: selectCellIndex.row]?.parts?.dayShort?.pressureMm {
             pressur = "\(Int(double)) mm"
         }
+        
         if let humi = weather?.forecasts?[safe: selectCellIndex.row]?.parts?.dayShort?.humidity {
             humidity = "\(Int(humi))%"
         }
         
-        switch weather?.forecasts?[safe: selectCellIndex.row]?.parts?.dayShort?.windDir  {
+        switch weather?.forecasts?[safe: selectCellIndex.row]?.parts?.dayShort?.windDir {
         case "nw": dir = "north-west"
         case "n": dir = "north"
         case "ne": dir = "northeast"
@@ -145,56 +153,47 @@ extension DetailsPresenter: DetailsViewOutputProtocol {
         case .none: dir = "windless"
         case .some(_): dir = ""
         }
-        
         return FactViewModel(season: weather?.fact?.season ?? "", dayTemp: dayTemp,
                              nightTemp: nightTemp, condition: condition,
                              humidity: humidity, pressureMm: pressur,
                              windSpeed: windSpeed, windDir: dir)
     }
     
-    
-    
-    public func changeSelectCellIndex(_ index: IndexPath?) -> IndexPath {
+    func changeSelectCellIndex(_ index: IndexPath?) -> IndexPath {
         let oldInd = selectCellIndex
-        if index != nil {
-            selectCellIndex = index!
+        if let index {
+            selectCellIndex = index
         }
         return oldInd
     }
     
-    public func forecastCount() -> Int {
+    func forecastCount() -> Int {
         if let count = weather?.forecasts?.count {
             return count
         }
         return 0
     }
     
-    
-    
-    public func forecastViewModel(heightOfCell: Double, index: IndexPath) -> ForecastViewModel {
+    func forecastViewModel(heightOfCell: Double, index: IndexPath) -> ForecastViewModel {
         var dayTemp = ""
         var nightTemp = ""
         var date = ""
         var week = ""
         var svgStr = ""
-
-        if let  day = weather?.forecasts?[safe: index.row] {
+        
+        if let day = weather?.forecasts?[safe: index.row] {
             if let temp = day.parts?.dayShort?.temp {
                 dayTemp = "\(Int(temp))"
             }
+            
             if let temp = day.parts?.nightShort?.temp {
                 nightTemp = "\(Int(temp))"
             }
-            if day.date != nil {
-                let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "yyyy-MM-dd"
-                dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
-                
-                if let dateSelf = dateFormatter.date(from: day.date!) {
-                    dateFormatter.dateFormat = "dd.MM"
-                    date = dateFormatter.string(from: dateSelf)
-                    dateFormatter.dateFormat = "EEEE"
-                    let weekOld = dateFormatter.string(from: dateSelf)
+            
+            if let dateLocal = day.date {
+                if let dateSelf = stringToDate(dateLocal, format: "yyyy-MM-dd") {
+                    date = dateToString(dateSelf, format: "dd.MM")
+                    let weekOld = dateToString(dateSelf, format: "EEEE")
                     week = String(weekOld.prefix(3))
                 }
             }
@@ -207,66 +206,52 @@ extension DetailsPresenter: DetailsViewOutputProtocol {
                 svgStr = svgNew + svgOld
             }
         }
- 
         return ForecastViewModel(dayTemp: dayTemp, nightTemp: nightTemp,
                                  date: date, week: week, svgStr: svgStr)
     }
-
-    public func newsCount() -> Int {
+    
+    func newsCount() -> Int {
         if let count = news?.articles?.count {
             return count
         }
         return 0
     }
-     
     
-    public func createNewsViewModel(index: IndexPath) -> NewsViewModel {
-        
+    func createNewsViewModel(index: IndexPath) -> NewsViewModel {
         var title = ""
         var description = ""
         var date = ""
         
         if let item = news?.articles?[safe: index.row] {
-            if item.title != nil && item.articleDescription != nil {
-                title = item.title!
-                description = item.articleDescription!
+            if let _title = item.title, let _articleDescription = item.articleDescription {
+                title = _title
+                description = _articleDescription
             }
             
-            if item.publishedAt != nil {
-                let dateFormatter = DateFormatter()
-                dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
-                dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-                let datePublished = dateFormatter.date(from: item.publishedAt!)
-                dateFormatter.dateFormat = "dd.MM"
-                if datePublished != nil {
-                    date = dateFormatter.string(from: datePublished!)
+            if let _publishedAt = item.publishedAt {
+                if let datePublished = stringToDate(_publishedAt, format: "yyyy-MM-dd'T'HH:mm:ssZ") {
+                    date = dateToString(datePublished, format: "dd.MM")
                 }
             }
         }
-        
         return NewsViewModel(title: title, description: description, date: date)
     }
     
-    /// when u tap at newsCell
-    public func printItem(_ index: IndexPath) {
+    func printItem(_ index: IndexPath) {
+        /// when u tap at newsCell
         print(news?.articles?[safe: index.row] ?? "nil")
     }
 }
 
-
-
 // MARK: - DetailsInteractorOutputProtocol
 extension DetailsPresenter: DetailsInteractorOutputProtocol {
-    
-    public func updateViewWeather(_ weather: Weather) {
+    func updateViewWeather(_ weather: Weather) {
         self.weather = weather
         view?.configureWeatherView(indexCell: selectCellIndex)
         view?.stopShimmer()
     }
     
-    public func updateNews(_ news: News) {
+    func updateNews(_ news: News) {
         self.news = news
     }
 }
-
-

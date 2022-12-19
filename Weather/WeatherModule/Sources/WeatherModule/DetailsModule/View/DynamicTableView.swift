@@ -8,7 +8,6 @@
 import UIKit
 
 final class DynamicTableView: UITableView {
-
     var dynamicRowHeight: CGFloat = UITableView.automaticDimension {
         didSet {
             rowHeight = UITableView.automaticDimension
@@ -16,9 +15,9 @@ final class DynamicTableView: UITableView {
         }
     }
 
-    public override var intrinsicContentSize: CGSize { contentSize }
+    override var intrinsicContentSize: CGSize { contentSize }
 
-    public override func layoutSubviews() {
+    override func layoutSubviews() {
         super.layoutSubviews()
         if !bounds.size.equalTo(intrinsicContentSize) {
             invalidateIntrinsicContentSize()

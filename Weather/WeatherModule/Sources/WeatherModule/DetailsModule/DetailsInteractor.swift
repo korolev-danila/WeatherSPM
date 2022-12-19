@@ -18,12 +18,11 @@ protocol DetailsInteractorOutputProtocol: AnyObject {
 }
 
 final class DetailsInteractor {
-    
     weak var presenter: DetailsInteractorOutputProtocol?
     private let coreDataManager: CoreDataManagerProtocol
     private let networkManager: NetworkManagerProtocol
     
-    init(coreData: CoreDataManagerProtocol, network: NetworkManagerProtocol){
+    init(coreData: CoreDataManagerProtocol, network: NetworkManagerProtocol) {
         self.coreDataManager = coreData
         self.networkManager = network
     }
@@ -32,26 +31,23 @@ final class DetailsInteractor {
         print("deinit DetailsInteractor")
     }
     
-    
-    
     // MARK: - Private method
-    private func  fetchIcons(weather: Weather) {
-        
+    private func fetchIcons(weather: Weather) {
         var weatherLocal = weather
         
-        if weatherLocal.forecasts != nil {
+        if let forecasts = weatherLocal.forecasts {
             var index = 0
             var counte = 0
-            for _ in weatherLocal.forecasts! {
-                
-                if let icon = weatherLocal.forecasts![index].parts?.dayShort?.icon {
-                    requestIcon(icon,index: index) { [weak self] (i,svg) in
-                        if weatherLocal.forecasts!.count > i {
-                            weatherLocal.forecasts![i].svgStr = svg
-                        }
+            for _ in forecasts {
+                if let icon = forecasts[index].parts?.dayShort?.icon {
+                    requestIcon(icon,index: index) { [weak self] (index,svg) in
+                        guard let _self = self,
+                              forecasts.count > index else { return }
+                        weatherLocal.forecasts?[index].svgStr = svg
                         counte += 1
-                        if counte == weatherLocal.forecasts?.count {
-                            self?.presenter?.updateViewWeather(weatherLocal)
+                        
+                        if counte == forecasts.count {
+                            _self.presenter?.updateViewWeather(weatherLocal)
                         }
                     }
                 }
@@ -60,61 +56,53 @@ final class DetailsInteractor {
         }
     }
     
-    private func requestIcon(_ icon: String, index: Int, completion: @escaping (_ i: Int,_ svg: String) -> ()) {
-        
-        networkManager.requestIcon(icon, index: index) { i, svg in
-            completion(i, svg)
+    private func requestIcon(_ icon: String, index: Int, completion: @escaping (_ index: Int,_ svg: String) -> ()) {
+        networkManager.requestIcon(icon, index: index) { index, svg in
+            completion(index, svg)
         }
     }
     
     private func updateAndSaveCityWeather(city: City, weather: Weather) {
-        
-        if weather.fact?.temp != nil {
+        if let temp = weather.fact?.temp,
+           let offset = weather.info?.tzinfo?.offset {
             city.timeAndTemp.isNil = false
-            city.timeAndTemp.temp = weather.fact!.temp!
+            city.timeAndTemp.temp = temp
+            city.timeAndTemp.utcDiff = offset
+            coreDataManager.saveContext()
         }
-        if weather.info?.tzinfo?.offset != nil {
-            city.timeAndTemp.utcDiff = weather.info!.tzinfo!.offset!
-        }
-        
-        coreDataManager.saveContext()
     }
 }
 
-
-
 // MARK: - DetailsInteractorInputProtocol
 extension DetailsInteractor: DetailsInteractorInputProtocol {
-    
-    public func requestWeaher(forCity city: City) {
-        
+    func requestWeaher(forCity city: City) {
         networkManager.requestWeaher(lat: city.latitude, long: city.longitude, limit: 7) { [weak self] weather in
-            self?.presenter?.updateViewWeather(weather)
-            self?.updateAndSaveCityWeather(city: city, weather: weather)
+            guard let _self = self else { return }
+            _self.presenter?.updateViewWeather(weather)
+            _self.updateAndSaveCityWeather(city: city, weather: weather)
             DispatchQueue.main.async {
-                self?.fetchIcons(weather: weather)
+                _self.fetchIcons(weather: weather)
             }
         }
     }
     
-    public func getNewsForCity(_ cityName: String) {
-        
+    func getNewsForCity(_ cityName: String) {
         let name = cityName.replacingOccurrences(of: " ", with: "+")
-        
         let removeOneWeek = Calendar.current.date(byAdding: .weekOfYear, value: -1, to: Date())
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
         formatter.timeZone = TimeZone(secondsFromGMT: 0)
-        var timeString = formatter.string(from: Date())
+        var dateOld = formatter.string(from: Date())
         let dateNow = formatter.string(from: Date())
-        if let date = removeOneWeek {
-            timeString = formatter.string(from: date)
-        }
         
-        let url =  "https://newsapi.org/v2/everything?q=\(name)&from=\(timeString)&to=\(dateNow)&sortBy=popularity&language=en&searchIn=title"
+        if let date = removeOneWeek {
+            dateOld = formatter.string(from: date)
+        }
+        let url =  "https://newsapi.org/v2/everything?q=\(name)&from=\(dateOld)&to=\(dateNow)&sortBy=popularity&language=en&searchIn=title"
         
         networkManager.getNewsForCity(url) { [weak self] news in
-            self?.presenter?.updateNews(news)
+            guard let _self = self else { return }
+            _self.presenter?.updateNews(news)
         }
     }
 }

@@ -8,7 +8,6 @@
 import Foundation
 
 protocol MainInteractorInputProtocol {
-    
     func fetchCountrys()
     func resetAllRecords()
     func deleteCity(_ city: City)
@@ -22,68 +21,53 @@ protocol MainInteractorOutputProtocol: AnyObject {
     func updateTableView()
 }
 
-
-
 final class MainInteractor {
     weak var presenter: MainInteractorOutputProtocol?
     private let coreDataManager: CoreDataManagerProtocol
     private let networkManager: NetworkManagerProtocol
     
-    
-    init(coreData: CoreDataManagerProtocol, network: NetworkManagerProtocol){
+    init(coreData: CoreDataManagerProtocol, network: NetworkManagerProtocol) {
         self.coreDataManager = coreData
         self.networkManager = network
     }
     
+    // MARK: - Private method
     private func updateImg(image: Data, in country: Country) {
-
         country.flagData = image
-        
         coreDataManager.saveContext()
         fetchCountrys()
         presenter?.updateTableView()
-        
     }
     
     private func updateWeather(with weather: Weather, in city: City) {
-        if weather.fact?.temp != nil {
-            city.timeAndTemp.isNil = false 
-            city.timeAndTemp.temp = weather.fact!.temp!
-        }
-        if weather.info?.tzinfo?.offset != nil {
-            city.timeAndTemp.utcDiff = weather.info!.tzinfo!.offset!
-        }
+        guard let temp = weather.fact?.temp,
+              let offset = weather.info?.tzinfo?.offset else { return }
         
+        city.timeAndTemp.isNil = false
+        city.timeAndTemp.temp = temp
+        city.timeAndTemp.utcDiff = offset
         coreDataManager.saveContext()
         presenter?.updateTableView()
-
     }
 }
 
-
-
 // MARK: - MainInteractorInputProtocol
 extension MainInteractor: MainInteractorInputProtocol {
-    
-
-    public func fetchCountrys() {
-        
+    func fetchCountrys() {
         presenter?.updateCountrysArray(coreDataManager.fetchCountrys())
     }
     
-    public func resetAllRecords() {
-        
+    func resetAllRecords() {
         coreDataManager.resetAllRecords()
         fetchCountrys()
     }
     
-    public func deleteCity(_ city: City) {
+    func deleteCity(_ city: City) {
         coreDataManager.deleteCity(city)
         fetchCountrys()
     }
     
-    
-    public func save(_ citySearch: CitySearch) {
+    func save(_ citySearch: CitySearch) {
         if let city = coreDataManager.save(citySearch) {
             fetchCountrys()
             presenter?.updateTableView()
@@ -93,21 +77,18 @@ extension MainInteractor: MainInteractorInputProtocol {
         }
     }
     
-    
-    // MARK: - Request
-    public func requestFlagImg(country: Country) {
-        
+    func requestFlagImg(country: Country) {
         let iso = country.isoA2.lowercased()
-        
         networkManager.requestFlagImg(iso: iso) { [weak self] imgData in
-            self?.updateImg(image: imgData, in: country)
+            guard let _self = self else { return }
+            _self.updateImg(image: imgData, in: country)
         }
     }
     
-    public func requestWeaher(forCity city: City) {
-
+    func requestWeaher(forCity city: City) {
         networkManager.requestWeaher(lat: city.latitude, long: city.longitude, limit: 1) { [weak self] weather in
-            self?.updateWeather(with: weather, in: city)
+            guard let _self = self else { return }
+            _self.updateWeather(with: weather, in: city)
         }
     }
 }

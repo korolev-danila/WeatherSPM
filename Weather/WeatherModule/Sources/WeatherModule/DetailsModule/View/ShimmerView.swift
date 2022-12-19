@@ -9,134 +9,99 @@ import UIKit
 import SnapKit
 
 final class ShimmerView: UIView {
-    
     private let backColor = UIColor.systemBackground
-    
     private let topView: UIView = {
         let view = UIView()
         view.backgroundColor = .clear
         view.translatesAutoresizingMaskIntoConstraints = false
-        
         return view
     }()
-    
     private let bigView: UIView = {
         let view = UIView()
         view.layer.cornerRadius = 15
         view.layer.masksToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
-        
         return view
     }()
-    
     private let cityView: UIView = {
         let view = UIView()
         view.layer.cornerRadius = 12
         view.layer.masksToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
-
         return view
     }()
-    
     private let cityLayer = CAGradientLayer()
-    
     private let cell1View: UIView = {
         let view = UIView()
         view.layer.cornerRadius = 10
         view.layer.masksToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
-        
         return view
     }()
-    
     private let cell1Layer = CAGradientLayer()
-    
     private let cell2View: UIView = {
         let view = UIView()
         view.layer.cornerRadius = 10
         view.layer.masksToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
-        
         return view
     }()
-    
     private let cell2Layer = CAGradientLayer()
-    
     private let cell3View: UIView = {
         let view = UIView()
         view.layer.cornerRadius = 10
         view.layer.masksToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
-        
         return view
     }()
-    
     private let cell3Layer = CAGradientLayer()
-    
     private let cell4View: UIView = {
         let view = UIView()
         view.layer.cornerRadius = 10
         view.layer.masksToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
-        
         return view
     }()
-    
     private let cell4Layer = CAGradientLayer()
-    
     private let cell5View: UIView = {
         let view = UIView()
         view.layer.cornerRadius = 10
         view.layer.masksToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
-        
         return view
     }()
-    
     private let cell5Layer = CAGradientLayer()
-    
     private let cell6View: UIView = {
         let view = UIView()
         view.layer.cornerRadius = 10
         view.layer.masksToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
-        
         return view
     }()
-    
     private let cell6Layer = CAGradientLayer()
-    
     private let cell7View: UIView = {
         let view = UIView()
         view.layer.cornerRadius = 10
         view.layer.masksToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
-        
         return view
     }()
-    
     private let cell7Layer = CAGradientLayer()
-    
     private let newsView: UIView = {
         let view = UIView()
         view.layer.cornerRadius = 15
         view.layer.masksToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
-        
         return view
     }()
-    
     private let newsLayer = CAGradientLayer()
-    
     private let imageViewHConst: CGFloat = 172
     private let imageToCityConst: CGFloat = -12
     private let cityViewHConst: CGFloat = 172
     
-    
     // MARK: - Init
-    override init( frame: CGRect) {
+    override init(frame: CGRect) {
         super.init(frame: frame)
-        
         setupViews()
     }
     
@@ -158,7 +123,6 @@ final class ShimmerView: UIView {
         bigView.addSubview(cell5View)
         bigView.addSubview(cell6View)
         bigView.addSubview(cell7View)
-        
         bigView.addSubview(newsView)
         
         bigView.backgroundColor = .tertiaryLabel
@@ -240,9 +204,7 @@ final class ShimmerView: UIView {
         }
     }
     
-    
     private func addAnimation() -> CABasicAnimation {
-       
         let animation = CABasicAnimation(keyPath: "locations")
         animation.fromValue = [-1.0, -0.5, 0.0]
         animation.toValue = [1.0, 1.5, 2.0]
@@ -250,15 +212,11 @@ final class ShimmerView: UIView {
         animation.duration = 0.7
         return animation
     }
-
-    
     
     // MARK: - Public method
-    public func startShimmerEffect() {
-        
-        let gradientColorOne : CGColor = backColor.cgColor
-        let gradientColorTwo : CGColor = UIColor.secondarySystemBackground.cgColor
-        
+    func startShimmerEffect() {
+        let gradientColorOne: CGColor = backColor.cgColor
+        let gradientColorTwo: CGColor = UIColor.secondarySystemBackground.cgColor
         let animation = addAnimation()
         
         func config(view: UIView, layer: CAGradientLayer) {
@@ -269,7 +227,6 @@ final class ShimmerView: UIView {
             layer.colors = [gradientColorOne, gradientColorTwo, gradientColorOne]
             layer.locations = [0.0, 0.5, 1.0]
             view.layer.addSublayer(layer)
-            
             layer.add(animation, forKey: animation.keyPath)
         }
         
@@ -282,10 +239,9 @@ final class ShimmerView: UIView {
         config(view: cell6View, layer: cell6Layer)
         config(view: cell7View, layer: cell7Layer)
         config(view: newsView, layer: newsLayer)
-        
     }
     
-    public func stopShimmerEffect() {
+    func stopShimmerEffect() {
         cityView.layer.sublayers?.removeAll()
         cell1View.layer.sublayers?.removeAll()
         cell2View.layer.sublayers?.removeAll()
@@ -297,4 +253,3 @@ final class ShimmerView: UIView {
         newsView.layer.sublayers?.removeAll()
     }
 }
-

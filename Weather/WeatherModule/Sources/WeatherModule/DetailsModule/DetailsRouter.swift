@@ -8,7 +8,6 @@
 import UIKit
 
 protocol DetailsRouterProtocol: AnyObject {
-
     func popVC()
 }
 
@@ -24,10 +23,9 @@ final class DetailsRouter {
     }
 }
 
-
+// MARK: - DetailsRouterProtocol
 extension DetailsRouter: DetailsRouterProtocol {
-    
-    public func popVC() {
+    func popVC() {
         self.navigationController?.popViewController(animated: true)
-    }    
+    }
 }

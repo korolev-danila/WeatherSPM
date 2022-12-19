@@ -6,7 +6,6 @@
 //
 import UIKit
 
-
 final public class MainModulBuider {
     public static func build() -> UINavigationController {
         let cdManager = CoreDataManager()

@@ -9,44 +9,32 @@ import UIKit
 import SnapKit
 
 protocol SearchViewInputProtocol: AnyObject {
-    
     func reloadTableView()
     func startAnimation()
     func stopAnimation()
 }
 
 protocol SearchViewOutputProtocol {
-    
     func viewModel(_ index: IndexPath) -> SearchViewModel
     func citysCount() -> Int
     func save(_ index: IndexPath)
     func requestCities(_ string: String)
-    
 }
 
 final class SearchViewController: UIViewController {
-    
     private let presenter: SearchViewOutputProtocol
-    
-    private var search: String = ""
     
     private let cancelButton: UIButton = {
         let button = UIButton()
         button.setTitle("Cancel", for: .normal)
         button.setTitleColor(.label, for: .normal)
-        button.addTarget(self, action: #selector(cancelPress), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
-        
         return button
     }()
-    
     private let activityView: UIActivityIndicatorView = {
-        
         let act = UIActivityIndicatorView(style: .large)
-        
         return act
     }()
-    
     private let textField: UITextField = {
         let tf = UITextField()
         tf.placeholder = "Search City"
@@ -64,48 +52,40 @@ final class SearchViewController: UIViewController {
         tf.keyboardType = UIKeyboardType.default
         tf.returnKeyType = UIReturnKeyType.done
         tf.clearButtonMode = UITextField.ViewMode.whileEditing
-        
         return tf
     }()
-    
-    
     private let tableView: UITableView = {
         let tv = UITableView()
         tv.translatesAutoresizingMaskIntoConstraints = false
         tv.register(SearchCell.self, forCellReuseIdentifier: "cell")
         tv.backgroundColor = .clear
         tv.keyboardDismissMode = .onDrag
-        
         return tv
     }()
-    
-    
     
     // MARK: - Initialize & viewDidLoad
     init(presenter: SearchViewOutputProtocol) {
         self.presenter = presenter
-        
         super.init(nibName: nil, bundle: nil)
     }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupViews()
+        textField.becomeFirstResponder()
     }
     
     deinit {
         print("deinit SearchViewController")
     }
     
-    public override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        setupViews()
-        textField.becomeFirstResponder()
-    }
-    
+    // MARK: - Private method
     private func setupViews() {
-        
         view.backgroundColor = .systemBackground
-        
         view.addSubview(textField)
         view.addSubview(cancelButton)
         view.addSubview(tableView)
@@ -115,26 +95,24 @@ final class SearchViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         
+        cancelButton.addTarget(self, action: #selector(cancelPress), for: .touchUpInside)
         
         activityView.snp.makeConstraints { make in
             make.centerX.equalTo(view.snp.centerX)
             make.centerY.equalTo(view.snp.centerY).offset(-75)
         }
-        
         textField.snp.makeConstraints { make in
             make.top.equalTo(8)
             make.leading.equalTo(view.safeAreaLayoutGuide.snp.leading)
             make.trailing.equalTo(cancelButton.snp.leading)
             make.height.equalTo(44)
         }
-        
         cancelButton.snp.makeConstraints { make in
             make.top.equalTo(8)
             make.trailing.equalTo(view.safeAreaLayoutGuide.snp.trailing)
             make.width.equalTo(66)
             make.height.equalTo(44)
         }
-        
         tableView.snp.makeConstraints { make in
             make.top.equalTo(55)
             make.bottom.equalTo(view.snp_bottomMargin)
@@ -152,16 +130,15 @@ final class SearchViewController: UIViewController {
 
 // MARK: - SearchViewInputProtocol
 extension SearchViewController: SearchViewInputProtocol {
-    
-    public func reloadTableView() {
+    func reloadTableView() {
         tableView.reloadData()
     }
     
-    public func startAnimation() {
+    func startAnimation() {
         activityView.startAnimating()
     }
     
-    public func stopAnimation() {
+    func stopAnimation() {
         activityView.stopAnimating()
     }
 }
@@ -170,9 +147,10 @@ extension SearchViewController: SearchViewInputProtocol {
 
 // MARK: - TextField Delegate
 extension SearchViewController: UITextFieldDelegate {
-    
-    public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange,
+                   replacementString string: String) -> Bool {
+        var search = ""
+        
         if string.isEmpty {
             if let text = textField.text {
                 search = String(text.dropLast())
@@ -184,45 +162,38 @@ extension SearchViewController: UITextFieldDelegate {
         }
         
         presenter.requestCities(search)
-        
         return true
     }
     
-    public func textFieldShouldClear(_ textField: UITextField) -> Bool {
-        
+    func textFieldShouldClear(_ textField: UITextField) -> Bool {
         activityView.stopAnimating()
-        search = ""
         return true
     }
 }
 
-
-
 // MARK: - TableViewController Delegate
 extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
-    
-    public func numberOfSections(in tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 60
     }
     
-    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         presenter.save(indexPath)
         self.dismiss(animated: true, completion: nil)
     }
     
-    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return presenter.citysCount()
     }
     
-    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath as IndexPath) as! SearchCell
         
-        cell.configureCell( presenter.viewModel(indexPath))
-        
+        cell.configureCell(presenter.viewModel(indexPath))
         return cell
     }
 }
